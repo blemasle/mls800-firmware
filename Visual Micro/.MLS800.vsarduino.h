@@ -7,6 +7,7 @@
 #define ARDUINO_MAIN
 #define __AVR__
 #define F_CPU 16000000L
+#define _MCP23017_INTERRUPT_SUPPORT_
 #define __cplusplus
 #define __inline__
 #define __asm__(x)
@@ -29,10 +30,15 @@
 typedef unsigned char byte;
 extern "C" void __cxa_pure_virtual() {;}
 
+void userInput();
+void setupDisplay();
+void setupUi();
+void setupStorage();
 //
 //
 
 #include "C:\Apps\Development\IDE\Arduino\hardware\arduino\variants\eightanaloginputs\pins_arduino.h" 
 #include "C:\Apps\Development\IDE\Arduino\hardware\arduino\cores\arduino\arduino.h"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800.ino"
+#include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800.h"
 #endif
