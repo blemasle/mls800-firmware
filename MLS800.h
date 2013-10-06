@@ -1,11 +1,15 @@
+#ifndef _MLS800_h
+#define _MLS800_h
+
 #if ARDUINO >= 100
 #include <Arduino.h>
 #else
 #include <WProgram.h>
 #endif
 
-#ifndef _MLS800_h
-#define _MLS800_h
+#include "MLS800_version.h"
+#define CONFIG_ADDR 0;
+#define CONFIG_SEED "QUDE";
 
 #define UI_ADDR 0x20
 #define DISPLAY_ADDR 0x20
