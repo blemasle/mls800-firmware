@@ -1,0 +1,6 @@
+* text=auto !eol
+/MLS800.ino -text
+/MLS800.sln -text
+/MLS800.vcxproj -text
+/MLS800.vcxproj.filters -text
+Visual[!!-~]Micro/.MLS800.vsarduino.h -text
