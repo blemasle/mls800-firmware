@@ -10,7 +10,11 @@ E24LC256 _storage = E24LC256(STORAGE_ADDR);
 SAA1064 _display = SAA1064(DISPLAY_ADDR);
 Config _config;
 
+byte _currentLoopStates;
+volatile bool input = false;
 
+#ifdef _DEBUG
+#define printDebug(msg) startSerial();Serial.println(msg);Serial.end();
 void startSerial()
 {
 	endSerial();
@@ -21,11 +25,34 @@ void endSerial()
 {
 	Serial.end();
 }
-
+#else
+#define printDebug
+#endif
 
 //interrupt handler for user input
-void userInput()
+void uiInterrupt()
 {
+	input = true;
+}
+
+//debounce user input and clear interrupts
+byte debounceInput()
+{
+	byte a, b;
+	byte captureA, captureB;
+	byte currentB;
+
+	delay(DEBOUNCE_DELAY);
+	input = false;
+	_ui.interruptedBy(a, b);
+	_ui.clearInterrupts(captureA, captureB);
+	currentB = _ui.readPort(UI_BTN_PORT);
+	if((b & ~currentB) == (b & ~captureB))
+	{
+		return b;
+	}
+
+	return LOW;
 }
 
 //display configuration
@@ -39,23 +66,30 @@ void setupUi()
 {
 	_ui.init();
 
-	//port a : input
-	_ui.portMode(0, 0);
-	//port b : output
-	_ui.portMode(0, 0xFF);
+	//port a : ouput
+	_ui.portMode(UI_LEDS_PORT, 0x00);
+	//port b : input
+	_ui.portMode(UI_BTN_PORT, 0xFF);
 
 	_ui.interruptMode(OR);
-	_ui.interrupt(1, FALLING);
+	_ui.interrupt(UI_BTN_PORT, FALLING);
 
 	_ui.clearInterrupts();
-	attachInterrupt(1, userInput, FALLING);
+	attachInterrupt(UI_INT_PIN, uiInterrupt, FALLING);
 }
 
+void displayLoopStates(byte state)
+{
+	_ui.writePort(UI_LEDS_PORT, state);
+}
+
+//storage configuration
 void setupStorage()
 {
 	//nothing to do yet
 }
 
+//basic config management
 void writeConfig()
 {
 	_storage.writeBlock(CONFIG_ADDR, _config);
@@ -84,24 +118,37 @@ void readConfig()
 		resetConfig();
 	}
 }
+//end basic config management
 
 void setup()
 {
 	Wire.begin();
-	
+	printDebug("Setup storage...");
 	setupStorage();
+	printDebug("Reading configuration...");
 	readConfig();
+	printDebug("Setup display...");
 	setupDisplay((SAA1064_DIM)_config.displayDim);
 	_display.display(_config.version);
-
-	setupUi();
-
 	
+	printDebug("Setup user interface...");
+	setupUi();
+	displayLoopStates(_config.lastState);
+	printDebug("Setup done !");
+#if _DEBUG
+	_ui.debug();
+#endif
+
 }
 
 void loop()
 {
-
-  /* add main program code here */
-
+	//handle user input first
+	byte bttn;
+	if(input && (bttn = debounceInput()) != LOW)
+	{
+		//do what we need to do under the current state
+		printDebug("Interrupted by :");
+		printDebug(bttn);
+	}
 }

@@ -3,6 +3,7 @@
 //Board = Arduino Nano w/ ATmega328
 #define __AVR_ATmega328P__
 #define 
+#define _DEBUG 1
 #define ARDUINO 105
 #define ARDUINO_MAIN
 #define __AVR__
@@ -32,9 +33,11 @@ extern "C" void __cxa_pure_virtual() {;}
 
 void startSerial();
 void endSerial();
-void userInput();
+void uiInterrupt();
+byte debounceInput();
 void setupDisplay(SAA1064_DIM dim);
 void setupUi();
+void displayLoopStates(byte state);
 void setupStorage();
 void writeConfig();
 void resetConfig();

@@ -16,6 +16,12 @@
 #define DISPLAY_ADDR 0x38
 #define STORAGE_ADDR 0x50
 
+#define UI_BTN_PORT 1
+#define UI_LEDS_PORT 0
+#define UI_INT_PIN 1
+
+#define DEBOUNCE_DELAY 100
+
 struct Config
 {
 	char seed[5];
