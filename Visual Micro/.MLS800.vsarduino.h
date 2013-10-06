@@ -30,10 +30,15 @@
 typedef unsigned char byte;
 extern "C" void __cxa_pure_virtual() {;}
 
+void startSerial();
+void endSerial();
 void userInput();
-void setupDisplay();
+void setupDisplay(SAA1064_DIM dim);
 void setupUi();
 void setupStorage();
+void writeConfig();
+void resetConfig();
+void readConfig();
 //
 //
 
@@ -41,4 +46,5 @@ void setupStorage();
 #include "C:\Apps\Development\IDE\Arduino\hardware\arduino\cores\arduino\arduino.h"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800.ino"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800.h"
+#include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800_version.h"
 #endif

@@ -8,20 +8,21 @@
 #endif
 
 #include "MLS800_version.h"
-#define CONFIG_ADDR 0;
-#define CONFIG_SEED "QUDE";
+
+#define CONFIG_ADDR 0
+#define CONFIG_SEED "AUDE"
 
 #define UI_ADDR 0x20
-#define DISPLAY_ADDR 0x20
-#define STORAGE_ADDR 0x20
+#define DISPLAY_ADDR 0x38
+#define STORAGE_ADDR 0x50
 
 struct Config
 {
 	char seed[5];
-	char version[5];
+	char version[6];
 	byte rxChannel;
 	byte txChannel;
-	byte lastPath;
+	byte lastPatch;
 	byte lastState;
 	byte displayDim;
 };
