@@ -11,6 +11,8 @@ SAA1064 _display = SAA1064(DISPLAY_ADDR);
 Config _config;
 
 byte _currentLoopStates;
+byte _currentInputStates;
+
 volatile bool input = false;
 
 #ifdef _DEBUG
@@ -47,9 +49,10 @@ byte debounceInput()
 	_ui.interruptedBy(a, b);
 	_ui.clearInterrupts(captureA, captureB);
 	currentB = _ui.readPort(UI_BTN_PORT);
-	if((b & ~currentB) == (b & ~captureB))
+	if((b & ~currentB) == (b & ~captureB) && currentB != _currentInputStates)
 	{
-		return b;
+		_currentInputStates = currentB;
+		if(b & ~currentB) return b;
 	}
 
 	return LOW;
@@ -72,10 +75,10 @@ void setupUi()
 	_ui.portMode(UI_BTN_PORT, 0xFF);
 
 	_ui.interruptMode(OR);
-	_ui.interrupt(UI_BTN_PORT, FALLING);
+	_ui.interrupt(UI_BTN_PORT, CHANGE);
 
 	_ui.clearInterrupts();
-	attachInterrupt(UI_INT_PIN, uiInterrupt, FALLING);
+	attachInterrupt(UI_INT_PIN, uiInterrupt, CHANGE);
 }
 
 void displayLoopStates(byte state)
