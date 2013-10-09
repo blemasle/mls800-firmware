@@ -103,6 +103,12 @@ void blinkLoopStates()
 	}
 }
 
+void stopBlinkLoopStates()
+{
+	_blink = false;
+	displayLoopStates(_currentLoopStates);
+}
+
 //storage configuration
 void setupStorage()
 {
@@ -172,5 +178,6 @@ void loop()
 		printDebug(bttn);
 	}
 
+	//handle user ui
 	if(_blink) blinkLoopStates();
 }
