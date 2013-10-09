@@ -9,6 +9,7 @@
 #define __AVR__
 #define F_CPU 16000000L
 #define _MCP23017_INTERRUPT_SUPPORT_
+#define _MCP23017_INTERRUPT_DEBOUNCE_
 #define __cplusplus
 #define __inline__
 #define __asm__(x)
@@ -38,6 +39,7 @@ byte debounceInput();
 void setupDisplay(SAA1064_DIM dim);
 void setupUi();
 void displayLoopStates(byte state);
+void blinkLoopStates();
 void setupStorage();
 void writeConfig();
 void resetConfig();

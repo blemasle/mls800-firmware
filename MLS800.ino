@@ -13,6 +13,10 @@ Config _config;
 byte _currentLoopStates;
 byte _currentInputStates;
 
+long _previousMillis;
+bool _ledsShuttedOff;
+bool _blink;
+
 volatile bool input = false;
 
 #ifdef _DEBUG
@@ -86,6 +90,19 @@ void displayLoopStates(byte state)
 	_ui.writePort(UI_LEDS_PORT, state);
 }
 
+void blinkLoopStates()
+{
+	long currentMillis = millis();
+	short delay = _ledsShuttedOff ? BLINK_DELAY_LOW : BLINK_DELAY_HIGH;
+	if(currentMillis - _previousMillis > delay) {
+		if(_ledsShuttedOff) displayLoopStates(_currentLoopStates);
+		else displayLoopStates(0);
+
+		_ledsShuttedOff = !_ledsShuttedOff;
+		_previousMillis = currentMillis;
+	}
+}
+
 //storage configuration
 void setupStorage()
 {
@@ -154,4 +171,6 @@ void loop()
 		printDebug("Interrupted by :");
 		printDebug(bttn);
 	}
+
+	if(_blink) blinkLoopStates();
 }
