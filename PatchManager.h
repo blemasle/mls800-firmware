@@ -18,6 +18,9 @@ private:
 	byte _startAddr;
 	byte _patchesLength;
 	byte _ccLength;
+
+	bool validatePatchNumber(byte patchNumber, byte ccNumber);
+	unsigned short getPatchAddress(byte patchNumber, byte ccNumber);
 public:
 	PatchManager(E24LC256* storage);
 	~PatchManager();
