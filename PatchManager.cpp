@@ -13,3 +13,23 @@ void PatchManager::init(int startAddr, byte patchesLength, byte ccLength)
 	_patchesLength = patchesLength;
 	_ccLength = ccLength;
 }
+
+byte PatchManager::load(byte patchNumber)
+{
+
+}
+
+byte PatchManager::load(byte patchNumber, byte ccNumber)
+{
+
+}
+
+byte PatchManager::save(byte patchNumber, byte value)
+{
+
+}
+
+byte PatchManager::save(byte patchNumber, byte ccNumber, byte value)
+{
+
+}
