@@ -8,6 +8,7 @@
 #endif
 
 #include "MLS800_version.h"
+#include "PatchManager.h"
 
 #define CONFIG_ADDR 0
 #define CONFIG_SEED "AUDE"
@@ -25,14 +26,18 @@
 #define BLINK_DELAY_LOW 250
 #define BLINK_DELAY_HIGH 750
 
+#define PATCHES_ADDR E24LC256_PAGESIZE
+#define PATCH_COUNT 128
+#define CC_COUNT 128
+
 struct Config
 {
 	char seed[5];
 	char version[6];
 	byte rxChannel;
 	byte txChannel;
-	byte lastPatch;
-	byte lastState;
+	byte patchNumber;
+	byte currentState;
 	byte displayDim;
 };
 

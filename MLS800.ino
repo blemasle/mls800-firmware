@@ -8,6 +8,8 @@
 MCP23017 _ui = MCP23017(UI_ADDR);
 E24LC256 _storage = E24LC256(STORAGE_ADDR);
 SAA1064 _display = SAA1064(DISPLAY_ADDR);
+
+PatchManager _patchMngr = PatchManager(&_storage);
 Config _config;
 
 byte _currentLoopStates;
@@ -117,6 +119,12 @@ void setupStorage()
 	//nothing to do yet
 }
 
+//patch manager configuration
+void setupPatchManager()
+{
+	_patchMngr.init(PATCHES_ADDR, PATCH_COUNT, CC_COUNT);
+}
+
 //basic config management
 void writeConfig()
 {
@@ -155,14 +163,17 @@ void setup()
 	setupStorage();
 	printDebug("Reading configuration...");
 	readConfig();
+	printDebug("Setup patch manager...");
+	setupPatchManager();
 	printDebug("Setup display...");
 	setupDisplay((SAA1064_DIM)_config.displayDim);
 	_display.display(_config.version);
 	
 	printDebug("Setup user interface...");
 	setupUi();
-	displayLoopStates(_config.lastState);
+	displayLoopStates(_config.currentState);	
 	printDebug("Setup done !");
+
 #if _DEBUG
 	_ui.debug();
 #endif

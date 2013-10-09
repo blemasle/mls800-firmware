@@ -44,5 +44,5 @@ bool PatchManager::validatePatchNumber(byte patchNumber, byte ccNumber)
 
 unsigned short PatchManager::getPatchAddress(byte patchNumber, byte ccNumber)
 {
-	return patchNumber * (1 + _ccLength) + ccNumber;
+	return _startAddr + patchNumber * (1 + _ccLength) + ccNumber;
 }

@@ -42,6 +42,7 @@ void displayLoopStates(byte state);
 void blinkLoopStates();
 void stopBlinkLoopStates();
 void setupStorage();
+void setupPatchManager();
 void writeConfig();
 void resetConfig();
 void readConfig();
