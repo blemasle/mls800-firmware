@@ -15,10 +15,13 @@
 class PatchManager {
 private:
 	E24LC256* _storage;
+	byte _startAddr;
+	byte _patchesLength;
+	byte _ccLength;
 public:
 	PatchManager(E24LC256* storage);
 	~PatchManager();
-	void init(int patchesStartAddress, byte patchesLength, byte ccLength);
+	void init(int startAddr, byte patchesLength, byte ccLength);
 	
 	byte load(byte patchNumber);
 	byte load(byte patchNumber, byte ccNumber);
