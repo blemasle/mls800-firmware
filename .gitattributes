@@ -5,4 +5,6 @@
 /MLS800.vcxproj -text
 /MLS800.vcxproj.filters -text
 /MLS800_version.h -text
+/PatchManager.cpp -text
+/PatchManager.h -text
 Visual[!!-~]Micro/.MLS800.vsarduino.h -text

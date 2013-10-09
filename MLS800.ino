@@ -85,6 +85,7 @@ void setupUi()
 	attachInterrupt(UI_INT_PIN, uiInterrupt, CHANGE);
 }
 
+//====================== LEDs ========================//
 void displayLoopStates(byte state)
 {
 	_ui.writePort(UI_LEDS_PORT, state);
@@ -108,6 +109,7 @@ void stopBlinkLoopStates()
 	_blink = false;
 	displayLoopStates(_currentLoopStates);
 }
+//====================== /LEDs ======================//
 
 //storage configuration
 void setupStorage()

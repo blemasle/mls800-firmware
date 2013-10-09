@@ -40,6 +40,7 @@ void setupDisplay(SAA1064_DIM dim);
 void setupUi();
 void displayLoopStates(byte state);
 void blinkLoopStates();
+void stopBlinkLoopStates();
 void setupStorage();
 void writeConfig();
 void resetConfig();
@@ -52,4 +53,6 @@ void readConfig();
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800.ino"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800.h"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800_version.h"
+#include "E:\LTouristDocuments\Development\Arduino\MLS800\PatchManager.cpp"
+#include "E:\LTouristDocuments\Development\Arduino\MLS800\PatchManager.h"
 #endif
