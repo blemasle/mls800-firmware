@@ -19,7 +19,10 @@
 
 #define UI_BTN_PORT 1
 #define UI_LEDS_PORT 0
-#define UI_INT_PIN 1
+#define UI_INT 1
+
+#define EDIT_INT 0
+#define EDIT_BTTN_PIN 2
 
 #define DEBOUNCE_DELAY 100
 

@@ -35,7 +35,9 @@ extern "C" void __cxa_pure_virtual() {;}
 void startSerial();
 void endSerial();
 void uiInterrupt();
+void editInterrupt();
 byte debounceInput();
+byte debounceEdit();
 void setupDisplay(SAA1064_DIM dim);
 void setupUi();
 void displayLoopStates(byte state);
@@ -46,6 +48,7 @@ void setupPatchManager();
 void writeConfig();
 void resetConfig();
 void readConfig();
+void swichState();
 //
 //
 

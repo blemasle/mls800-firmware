@@ -12,6 +12,8 @@ SAA1064 _display = SAA1064(DISPLAY_ADDR);
 PatchManager _patchMngr = PatchManager(&_storage);
 Config _config;
 
+DeviceState _state;
+
 byte _currentLoopStates;
 byte _currentInputStates;
 
@@ -20,6 +22,7 @@ bool _ledsShuttedOff;
 bool _blink;
 
 volatile bool input = false;
+volatile bool edit = false;
 
 #ifdef _DEBUG
 #define printDebug(msg) startSerial();Serial.println(msg);Serial.end();
@@ -43,6 +46,11 @@ void uiInterrupt()
 	input = true;
 }
 
+void editInterrupt()
+{
+	edit = true;
+}
+
 //debounce user input and clear interrupts
 byte debounceInput()
 {
@@ -62,6 +70,12 @@ byte debounceInput()
 	}
 
 	return LOW;
+}
+
+byte debounceEdit()
+{
+	delay(DEBOUNCE_DELAY);
+	return digitalRead(EDIT_BTTN_PIN);
 }
 
 //display configuration
@@ -84,7 +98,11 @@ void setupUi()
 	_ui.interrupt(UI_BTN_PORT, CHANGE);
 
 	_ui.clearInterrupts();
-	attachInterrupt(UI_INT_PIN, uiInterrupt, CHANGE);
+	attachInterrupt(UI_INT, uiInterrupt, CHANGE);
+
+	//direct input pins configuration
+	pinMode(EDIT_BTTN_PIN, INPUT);
+	attachInterrupt(EDIT_INT, editInterrupt, RISING);
 }
 
 //====================== LEDs ========================//
@@ -156,6 +174,24 @@ void readConfig()
 }
 //end basic config management
 
+//====================== MODES =======================//
+
+void swichState() {
+	switch(_state)
+	{
+	case PLAYING:
+		_state = LEARNING;
+		break;
+	case LEARNING:
+		_state = EDITING;
+		break;
+	case EDITING:
+		_state = PLAYING;
+		break;
+	}
+}
+
+//====================== /MODES ======================//
 void setup()
 {
 	Wire.begin();
@@ -174,6 +210,7 @@ void setup()
 	displayLoopStates(_config.currentState);	
 	printDebug("Setup done !");
 
+	_state = PLAYING;
 #if _DEBUG
 	_ui.debug();
 #endif
@@ -189,6 +226,12 @@ void loop()
 		//do what we need to do under the current state
 		printDebug("Interrupted by :");
 		printDebug(bttn);
+	}
+
+	if(edit && (bttn = debounceEdit()) != LOW)
+	{
+		printDebug("Edit pressed");
+		swichState();
 	}
 
 	//handle user ui
