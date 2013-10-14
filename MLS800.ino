@@ -16,6 +16,7 @@ DeviceState _state;
 
 byte _currentLoopStates;
 byte _currentInputStates;
+byte _currentEditBttnState;
 
 long _previousMillis;
 bool _ledsShuttedOff;
@@ -74,8 +75,16 @@ byte debounceInput()
 
 byte debounceEdit()
 {
-	delay(DEBOUNCE_DELAY);
-	return digitalRead(EDIT_BTTN_PIN);
+	byte editBttnState = digitalRead(EDIT_BTTN_PIN);
+	if(editBttnState != _currentEditBttnState)
+	{
+		delay(DEBOUNCE_DELAY);
+		_currentEditBttnState = digitalRead(EDIT_BTTN_PIN);
+		return _currentEditBttnState;
+	}
+
+	//return actual state only on debounced RISING
+	return LOW;
 }
 
 //display configuration
@@ -189,6 +198,8 @@ void swichState() {
 		_state = PLAYING;
 		break;
 	}
+	printDebug("Device State changed :");
+	printDebug(_state == PLAYING ? "PLAYING" : _state == LEARNING ? "LEARNING" : "EDITING");
 }
 
 //====================== /MODES ======================//
@@ -233,7 +244,7 @@ void loop()
 		printDebug("Edit pressed");
 		swichState();
 	}
-
+	
 	//handle user ui
 	if(_blink) blinkLoopStates();
 }
