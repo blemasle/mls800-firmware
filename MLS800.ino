@@ -13,6 +13,7 @@ PatchManager _patchMngr = PatchManager(&_storage);
 Config _config;
 
 DeviceState _state;
+byte _editingValue;
 
 byte _currentLoopStates;
 byte _currentInputStates;
@@ -109,9 +110,11 @@ void setupUi()
 	_ui.clearInterrupts();
 	attachInterrupt(UI_INT, uiInterrupt, CHANGE);
 
-	//direct input pins configuration
+	//raw arduino pins configuration
 	pinMode(EDIT_BTTN_PIN, INPUT);
 	attachInterrupt(EDIT_INT, editInterrupt, RISING);
+
+	pinMode(EDIT_LED_PIN, OUTPUT);
 }
 
 //====================== LEDs ========================//
@@ -138,6 +141,7 @@ void stopBlinkLoopStates()
 	_blink = false;
 	displayLoopStates(_currentLoopStates);
 }
+
 //====================== /LEDs ======================//
 
 //storage configuration
@@ -183,7 +187,16 @@ void readConfig()
 }
 //end basic config management
 
+
+
 //====================== MODES =======================//
+
+void startEditing()
+{
+	displayPatchNumber(_config.patchNumber);
+	displayLoopStates(_config.currentState);
+	digitalWrite(EDIT_LED_PIN, HIGH);
+}
 
 void swichState() {
 	switch(_state)
@@ -193,6 +206,9 @@ void swichState() {
 		break;
 	case LEARNING:
 		_state = EDITING;
+		_config.patchNumber = 78;
+		_config.currentState = 0b10101101;
+		startEditing();
 		break;
 	case EDITING:
 		_state = PLAYING;
@@ -203,6 +219,23 @@ void swichState() {
 }
 
 //====================== /MODES ======================//
+
+//===================== DISPLAY ======================//
+
+void printNumber(char * s, byte nb)
+{
+	itoa(nb, nb > 99 ? s + 1 : nb > 9 ? s + 2 : s + 3, 10);
+}
+
+void displayPatchNumber(byte nb)
+{
+	char str[5] = "P   ";
+	printNumber(str, nb);
+	_display.display(str);
+}
+
+//===================== /DISPLAY =====================//
+
 void setup()
 {
 	Wire.begin();

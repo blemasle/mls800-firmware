@@ -24,6 +24,8 @@
 #define EDIT_INT 0
 #define EDIT_BTTN_PIN 2
 
+#define EDIT_LED_PIN 13
+
 #define DEBOUNCE_DELAY 100
 
 #define BLINK_DELAY_LOW 250

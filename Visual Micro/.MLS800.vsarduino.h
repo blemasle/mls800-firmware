@@ -48,7 +48,10 @@ void setupPatchManager();
 void writeConfig();
 void resetConfig();
 void readConfig();
+void startEditing();
 void swichState();
+void printNumber(char * s, byte nb);
+void displayPatchNumber(byte nb);
 //
 //
 
