@@ -30,6 +30,13 @@
 #define PATCH_COUNT 128
 #define CC_COUNT 128
 
+enum DeviceState
+{
+	PLAYING,
+	LEARNING,
+	EDITING
+};
+
 struct Config
 {
 	char seed[5];
