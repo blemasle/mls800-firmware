@@ -12,12 +12,14 @@ SAA1064 _display = SAA1064(DISPLAY_ADDR);
 PatchManager _patchMngr = PatchManager(&_storage);
 Config _config;
 
-DeviceState _state;
+DeviceState _mode;
 byte _editingValue;
 
 byte _currentLoopStates;
 byte _currentInputStates;
 byte _currentEditBttnState;
+
+byte _currentEditValue;
 
 long _previousMillis;
 bool _ledsShuttedOff;
@@ -120,6 +122,7 @@ void setupUi()
 }
 
 //====================== LEDs ========================//
+
 void displayLoopStates(byte state)
 {
 	_ui.writePort(UI_LEDS_PORT, state);
@@ -190,36 +193,66 @@ void readConfig()
 //end basic config management
 
 
+//===================== PATCHES ======================//
+
+void applyPatch(byte patch)
+{
+	//activateLoops(patch);
+	displayLoopStates(patch);
+}
+
+byte loadPatch(byte patchNumber)
+{
+	byte patch;
+	_patchMngr.load(patchNumber, patch);
+	_config.patchNumber = patchNumber;
+	_config.currentState = patch;
+
+	writeConfig();
+
+	applyPatch(_config.currentState);
+	displayPatchNumber(_config.patchNumber);
+
+	return _config.currentState;
+}
+
+//==================== /PATCHES =======================//
+
 
 //====================== MODES =======================//
 
 void startEditing()
 {
-	//_config.currentState = _patchMngr.load(_config.patchNumber);
-	//activateLoops(_config.currentState);
-	displayPatchNumber(_config.patchNumber);
-	displayLoopStates(_config.currentState);
+	_currentEditValue = loadPatch(_config.patchNumber);
+
 	digitalWrite(EDIT_LED_PIN, HIGH);
 }
 
+void endEditing()
+{
+	_config.currentState = _currentEditValue;
+	writeConfig();
+	digitalWrite(EDIT_LED_PIN, LOW);
+}
+
 void swichState() {
-	switch(_state)
+	switch(_mode)
 	{
 	case PLAYING:
-		_state = LEARNING;
+		_mode = LEARNING;
 		break;
 	case LEARNING:
-		_state = EDITING;
-		_config.patchNumber = 78;
-		_config.currentState = 0b10101101;
+		_mode = EDITING;
+		_config.patchNumber = 79;
 		startEditing();
 		break;
 	case EDITING:
-		_state = PLAYING;
+		_mode = PLAYING;
+		endEditing();
 		break;
 	}
 	debugPrintln("Device State changed :");
-	debugPrintln(_state == PLAYING ? "PLAYING" : _state == LEARNING ? "LEARNING" : "EDITING");
+	debugPrintln(_mode == PLAYING ? "PLAYING" : _mode == LEARNING ? "LEARNING" : "EDITING");
 }
 
 //====================== /MODES ======================//
@@ -255,10 +288,12 @@ void setup()
 	
 	debugPrintln("Setup user interface...");
 	setupUi();
-	displayLoopStates(_config.currentState);	
+	applyPatch(_config.currentState);	
+	displayPatchNumber(_config.patchNumber);
 	debugPrintln("Setup done !");
 
-	_state = PLAYING;
+	_mode = PLAYING;
+	digitalWrite(EDIT_LED_PIN, LOW);
 #if _DEBUG
 	_ui.debug();
 #endif
@@ -273,6 +308,11 @@ void loop()
 		//do what we need to do under the current state
 		debugPrintln("Interrupted by :");
 		debugPrintln(bttn);
+		if(_mode == EDITING)
+		{
+			_currentEditValue ^= bttn;
+			applyPatch(_currentEditValue);
+		}
 	}
 
 	if(edit && (bttn = debounceEdit()) != LOW)
