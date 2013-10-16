@@ -27,7 +27,8 @@ volatile bool input = false;
 volatile bool edit = false;
 
 #ifdef _DEBUG
-#define printDebug(msg) startSerial();Serial.println(msg);Serial.end();
+#define debugPrintln(msg) startSerial();Serial.println(msg);Serial.end();
+#define debugPrint(msg) startSerial();Serial.print(msg);Serial.end();
 void startSerial()
 {
 	endSerial();
@@ -39,7 +40,8 @@ void endSerial()
 	Serial.end();
 }
 #else
-#define printDebug
+#define debugPrintln
+#define debugPrint
 #endif
 
 //interrupt handler for user input
@@ -193,6 +195,8 @@ void readConfig()
 
 void startEditing()
 {
+	//_config.currentState = _patchMngr.load(_config.patchNumber);
+	//activateLoops(_config.currentState);
 	displayPatchNumber(_config.patchNumber);
 	displayLoopStates(_config.currentState);
 	digitalWrite(EDIT_LED_PIN, HIGH);
@@ -214,8 +218,8 @@ void swichState() {
 		_state = PLAYING;
 		break;
 	}
-	printDebug("Device State changed :");
-	printDebug(_state == PLAYING ? "PLAYING" : _state == LEARNING ? "LEARNING" : "EDITING");
+	debugPrintln("Device State changed :");
+	debugPrintln(_state == PLAYING ? "PLAYING" : _state == LEARNING ? "LEARNING" : "EDITING");
 }
 
 //====================== /MODES ======================//
@@ -239,26 +243,25 @@ void displayPatchNumber(byte nb)
 void setup()
 {
 	Wire.begin();
-	printDebug("Setup storage...");
+	debugPrintln("Setup storage...");
 	setupStorage();
-	printDebug("Reading configuration...");
+	debugPrintln("Reading configuration...");
 	readConfig();
-	printDebug("Setup patch manager...");
+	debugPrintln("Setup patch manager...");
 	setupPatchManager();
-	printDebug("Setup display...");
+	debugPrintln("Setup display...");
 	setupDisplay((SAA1064_DIM)_config.displayDim);
 	_display.display(_config.version);
 	
-	printDebug("Setup user interface...");
+	debugPrintln("Setup user interface...");
 	setupUi();
 	displayLoopStates(_config.currentState);	
-	printDebug("Setup done !");
+	debugPrintln("Setup done !");
 
 	_state = PLAYING;
 #if _DEBUG
 	_ui.debug();
 #endif
-
 }
 
 void loop()
@@ -268,13 +271,13 @@ void loop()
 	if(input && (bttn = debounceInput()) != LOW)
 	{
 		//do what we need to do under the current state
-		printDebug("Interrupted by :");
-		printDebug(bttn);
+		debugPrintln("Interrupted by :");
+		debugPrintln(bttn);
 	}
 
 	if(edit && (bttn = debounceEdit()) != LOW)
 	{
-		printDebug("Edit pressed");
+		debugPrintln("Edit pressed");
 		swichState();
 	}
 	

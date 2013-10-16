@@ -11,6 +11,7 @@
 
 #define PATCH_DEFAULT_VALUE 0
 #define PATCH_CC_DEFAULT_VALUE 0
+#define CC_UNDEFINED 255
 
 class PatchManager {
 private:
@@ -26,11 +27,11 @@ public:
 	~PatchManager();
 	void init(int startAddr, byte patchesLength, byte ccLength);
 	
-	byte load(byte patchNumber);
-	byte load(byte patchNumber, byte ccNumber);
+	bool load(byte patchNumber, byte& value);
+	bool load(byte patchNumber, byte ccNumber, byte& value);
 	
-	byte save(byte patchNumber, byte value);
-	byte save(byte patchNumber, byte ccNumber, byte value);
+	bool save(byte patchNumber, byte value);
+	bool save(byte patchNumber, byte ccNumber, byte value);
 };
 
 #endif
