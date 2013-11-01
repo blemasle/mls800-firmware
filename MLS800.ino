@@ -29,8 +29,8 @@ volatile bool input = false;
 volatile bool edit = false;
 
 #ifdef _DEBUG
-#define debugPrintln(msg) startSerial();Serial.println(msg);Serial.end();
-#define debugPrint(msg) startSerial();Serial.print(msg);Serial.end();
+#define debugPrintln(msg) //startSerial();Serial.println(msg);Serial.end();
+#define debugPrint(msg) //startSerial();Serial.print(msg);Serial.end();
 void startSerial()
 {
 	endSerial();
@@ -40,6 +40,7 @@ void startSerial()
 void endSerial()
 {
 	Serial.end();
+	MIDI.begin(MIDI_CHANNEL_OMNI);
 }
 #else
 #define debugPrintln
@@ -92,6 +93,21 @@ byte debounceEdit()
 	return LOW;
 }
 
+//==================== /SETUP =======================//
+
+//storage configuration
+void setupStorage()
+{
+	//nothing to do yet
+}
+
+//patch manager configuration
+void setupPatchManager()
+{
+	_patchMngr.init(PATCHES_ADDR, PATCH_COUNT, CC_COUNT);
+}
+
+
 //display configuration
 void setupDisplay(SAA1064_DIM dim)
 {
@@ -121,6 +137,43 @@ void setupUi()
 	pinMode(EDIT_LED_PIN, OUTPUT);
 }
 
+void setupMidi()
+{
+	MIDI.begin(MIDI_CHANNEL_OMNI);
+	MIDI.setHandleControlChange(handleControlChange);
+	MIDI.setHandleProgramChange(handleProgramChange);
+	
+	MIDI.read();
+}
+
+//===================== /SETUP =======================//
+
+//====================== MIDI ========================//
+
+void handleProgramChange(byte channel, byte number)
+{
+	digitalWrite(EDIT_LED_PIN, HIGH);
+	debugPrint("Program Change : ");
+	debugPrintln(number);
+	if(_mode == PLAYING || _mode == LEARNING)
+	{
+		_config.patchNumber = number;
+		loadPatch(_config.patchNumber);
+	}
+
+	if(_mode == LEARNING) swichState();
+}
+
+void handleControlChange(byte channel, byte number, byte value)
+{
+	debugPrint("Control Change : ");
+	debugPrint(number);
+	debugPrint(" ");
+	debugPrintln(value);
+}
+
+//====================== MIDI ========================//
+
 //====================== LEDs ========================//
 
 void displayLoopStates(byte state)
@@ -148,18 +201,6 @@ void stopBlinkLoopStates()
 }
 
 //====================== /LEDs ======================//
-
-//storage configuration
-void setupStorage()
-{
-	//nothing to do yet
-}
-
-//patch manager configuration
-void setupPatchManager()
-{
-	_patchMngr.init(PATCHES_ADDR, PATCH_COUNT, CC_COUNT);
-}
 
 //basic config management
 void writeConfig()
@@ -223,8 +264,7 @@ byte loadPatch(byte patchNumber)
 
 void startEditing()
 {
-	_currentEditValue = loadPatch(_config.patchNumber);
-
+	_currentEditValue = _config.currentState;
 	digitalWrite(EDIT_LED_PIN, HIGH);
 }
 
@@ -232,6 +272,7 @@ void endEditing()
 {
 	_config.currentState = _currentEditValue;
 	writeConfig();
+	_patchMngr.save(_config.patchNumber, _config.currentState);
 	digitalWrite(EDIT_LED_PIN, LOW);
 }
 
@@ -243,7 +284,6 @@ void swichState() {
 		break;
 	case LEARNING:
 		_mode = EDITING;
-		_config.patchNumber = 79;
 		startEditing();
 		break;
 	case EDITING:
@@ -290,6 +330,10 @@ void setup()
 	setupUi();
 	applyPatch(_config.currentState);	
 	displayPatchNumber(_config.patchNumber);
+
+	debugPrintln("Setup MIDI...");
+	setupMidi();
+
 	debugPrintln("Setup done !");
 
 	_mode = PLAYING;

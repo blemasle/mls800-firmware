@@ -3,7 +3,6 @@
 //Board = Arduino Nano w/ ATmega328
 #define __AVR_ATmega328P__
 #define 
-#define _DEBUG 1
 #define ARDUINO 105
 #define ARDUINO_MAIN
 #define __AVR__
@@ -38,13 +37,16 @@ void uiInterrupt();
 void editInterrupt();
 byte debounceInput();
 byte debounceEdit();
+void setupStorage();
+void setupPatchManager();
 void setupDisplay(SAA1064_DIM dim);
 void setupUi();
+void setupMidi();
+void handleProgramChange(byte channel, byte number);
+void handleControlChange(byte channel, byte number, byte value);
 void displayLoopStates(byte state);
 void blinkLoopStates();
 void stopBlinkLoopStates();
-void setupStorage();
-void setupPatchManager();
 void writeConfig();
 void resetConfig();
 void readConfig();
