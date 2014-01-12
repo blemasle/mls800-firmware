@@ -3,6 +3,7 @@
 //Board = Arduino Nano w/ ATmega328
 #define __AVR_ATmega328P__
 #define 
+#define _DEBUG 1
 #define ARDUINO 105
 #define ARDUINO_MAIN
 #define __AVR__

@@ -29,16 +29,17 @@ volatile bool input = false;
 volatile bool edit = false;
 
 #ifdef _DEBUG
-#define debugPrintln(msg) //startSerial();Serial.println(msg);Serial.end();
-#define debugPrint(msg) //startSerial();Serial.print(msg);Serial.end();
+#define debugPrintln(msg) startSerial();Serial.println(msg);endSerial();
+#define debugPrint(msg) startSerial();Serial.print(msg);endSerial();
 void startSerial()
 {
-	endSerial();
+	Serial.end();
 	Serial.begin(115200);
 }
 
 void endSerial()
 {
+	Serial.flush();
 	Serial.end();
 	MIDI.begin(MIDI_CHANNEL_OMNI);
 }
@@ -142,8 +143,6 @@ void setupMidi()
 	MIDI.begin(MIDI_CHANNEL_OMNI);
 	MIDI.setHandleControlChange(handleControlChange);
 	MIDI.setHandleProgramChange(handleProgramChange);
-	
-	MIDI.read();
 }
 
 //===================== /SETUP =======================//
@@ -162,6 +161,7 @@ void handleProgramChange(byte channel, byte number)
 	}
 
 	if(_mode == LEARNING) swichState();
+	digitalWrite(EDIT_LED_PIN, LOW);
 }
 
 void handleControlChange(byte channel, byte number, byte value)
@@ -328,6 +328,12 @@ void setup()
 	
 	debugPrintln("Setup user interface...");
 	setupUi();
+#if _DEBUG
+	_ui.debug();
+#endif
+
+	debugPrint("Loading patch ");
+	debugPrintln(_config.patchNumber);
 	applyPatch(_config.currentState);	
 	displayPatchNumber(_config.patchNumber);
 
@@ -338,14 +344,10 @@ void setup()
 
 	_mode = PLAYING;
 	digitalWrite(EDIT_LED_PIN, LOW);
-#if _DEBUG
-	_ui.debug();
-#endif
 }
 
 void loop()
 {
-	//handle user input first
 	byte bttn;
 	if(input && (bttn = debounceInput()) != LOW)
 	{
@@ -367,4 +369,6 @@ void loop()
 	
 	//handle user ui
 	if(_blink) blinkLoopStates();
+
+	MIDI.read();
 }
