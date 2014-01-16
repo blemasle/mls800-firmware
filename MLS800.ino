@@ -22,8 +22,13 @@ byte _currentEditBttnState;
 byte _currentEditValue;
 
 long _previousMillis;
-bool _ledsShuttedOff;
-bool _blink;
+long _previousEditLedMillis;
+long _previousDisplayMillis;
+bool _ledsShuttedOff = false;
+bool _displayShuttedOff = true;
+bool _blinkLoopStates;
+bool _blinkEditLed;
+bool _blinkDisplay;
 
 volatile bool input = false;
 volatile bool edit = false;
@@ -151,17 +156,18 @@ void setupMidi()
 
 void handleProgramChange(byte channel, byte number)
 {
-	digitalWrite(EDIT_LED_PIN, HIGH);
 	debugPrint("Program Change : ");
 	debugPrintln(number);
-	if(_mode == PLAYING || _mode == LEARNING)
+	if(_mode == PLAYING)
 	{
 		_config.patchNumber = number;
 		loadPatch(_config.patchNumber);
 	}
-
-	if(_mode == LEARNING) swichState();
-	digitalWrite(EDIT_LED_PIN, LOW);
+	else if(_mode == LEARNING) 
+	{
+		_config.patchNumber = number;
+		swichState();
+	}
 }
 
 void handleControlChange(byte channel, byte number, byte value)
@@ -175,6 +181,34 @@ void handleControlChange(byte channel, byte number, byte value)
 //====================== MIDI ========================//
 
 //====================== LEDs ========================//
+
+void blinkEditLed()
+{
+	long currentMillis = millis();
+	if(currentMillis - _previousEditLedMillis > BLINK_DELAY_HIGH) {
+		digitalWrite(EDIT_LED_PIN, !digitalRead(EDIT_LED_PIN));
+		_previousEditLedMillis = currentMillis;
+	}
+}
+
+void blinkDisplay()
+{
+	long currentMillis = millis();
+	if(currentMillis - _previousDisplayMillis > BLINK_DELAY_HIGH) {
+		if(_displayShuttedOff) displayPatchNumber(_config.patchNumber);
+		else _display.clear();
+
+		_displayShuttedOff = !_displayShuttedOff;
+		_previousDisplayMillis = currentMillis;
+	}
+}
+
+void stopBlinkDisplay()
+{
+	_blinkDisplay = false;
+	displayPatchNumber(_config.patchNumber);
+	_displayShuttedOff = true;
+}
 
 void displayLoopStates(byte state)
 {
@@ -196,8 +230,9 @@ void blinkLoopStates()
 
 void stopBlinkLoopStates()
 {
-	_blink = false;
+	_blinkLoopStates = false;
 	displayLoopStates(_currentLoopStates);
+	_ledsShuttedOff = false;
 }
 
 //====================== /LEDs ======================//
@@ -262,8 +297,22 @@ byte loadPatch(byte patchNumber)
 
 //====================== MODES =======================//
 
+void startLearning()
+{
+	_blinkEditLed = true;
+	_blinkDisplay = true;
+	_currentEditValue = _config.currentState;
+}
+
+void endLearning()
+{
+	displayPatchNumber(_config.patchNumber);
+}
+
 void startEditing()
 {
+	_blinkEditLed = false;
+	stopBlinkDisplay();
 	_currentEditValue = _config.currentState;
 	digitalWrite(EDIT_LED_PIN, HIGH);
 }
@@ -281,14 +330,16 @@ void swichState() {
 	{
 	case PLAYING:
 		_mode = LEARNING;
+		startLearning();
 		break;
 	case LEARNING:
+		endLearning();
 		_mode = EDITING;
 		startEditing();
 		break;
 	case EDITING:
-		_mode = PLAYING;
 		endEditing();
+		_mode = PLAYING;
 		break;
 	}
 	debugPrintln("Device State changed :");
@@ -368,7 +419,9 @@ void loop()
 	}
 	
 	//handle user ui
-	if(_blink) blinkLoopStates();
+	if(_blinkLoopStates) blinkLoopStates();
+	if(_blinkEditLed) blinkEditLed();
+	if(_blinkDisplay) blinkDisplay();
 
 	MIDI.read();
 }
