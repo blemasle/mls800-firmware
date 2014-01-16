@@ -1,4 +1,5 @@
 * text=auto !eol
+/CMakeLists.txt -text
 /MLS800.h -text
 /MLS800.ino -text
 /MLS800.sln -text
