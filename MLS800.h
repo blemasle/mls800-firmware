@@ -11,7 +11,7 @@
 #include "PatchManager.h"
 
 #define CONFIG_ADDR 0
-#define CONFIG_SEED "AUDE"
+#define CONFIG_SEED "AUDR"
 
 #define UI_ADDR 0x20
 #define DISPLAY_ADDR 0x38
