@@ -45,7 +45,7 @@ enum DeviceState
 struct Config
 {
 	char seed[5];
-	char version[11];
+	char version[7];
 	byte rxChannel;
 	byte txChannel;
 	byte patchNumber;
