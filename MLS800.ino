@@ -90,6 +90,7 @@ byte debounceEdit()
 	byte editBttnState = digitalRead(EDIT_BTTN_PIN);
 	if(editBttnState != _currentEditBttnState)
 	{
+		edit = false;
 		delay(DEBOUNCE_DELAY);
 		_currentEditBttnState = digitalRead(EDIT_BTTN_PIN);
 		return _currentEditBttnState;
@@ -127,6 +128,7 @@ void setupUi()
 
 	//port a : ouput
 	_ui.portMode(UI_LEDS_PORT, 0x00);
+
 	//port b : input
 	_ui.portMode(UI_BTN_PORT, 0xFF);
 
