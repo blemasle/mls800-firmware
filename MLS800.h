@@ -16,6 +16,7 @@
 #define UI_ADDR 0x20
 #define DISPLAY_ADDR 0x38
 #define STORAGE_ADDR 0x50
+#define LOOP_ADDR 0x24
 
 #define UI_BTN_PORT 1
 #define UI_LEDS_PORT 0

@@ -8,6 +8,7 @@
 MCP23017 _ui = MCP23017(UI_ADDR);
 E24LC256 _storage = E24LC256(STORAGE_ADDR);
 SAA1064 _display = SAA1064(DISPLAY_ADDR);
+MCP23017 _loops = MCP23017(LOOP_ADDR);
 
 PatchManager _patchMngr = PatchManager(&_storage);
 Config _config;
@@ -145,6 +146,16 @@ void setupUi()
 	pinMode(EDIT_LED_PIN, OUTPUT);
 }
 
+void setupLoops()
+{
+	_loops.init();
+	//all ports to output
+	//port A : OFF port
+	_loops.portMode(0, 0x00);
+	//port B : ON port
+	_loops.portMode(1, 0x00);
+}
+
 void setupMidi()
 {
 	MIDI.begin(MIDI_CHANNEL_OMNI);
@@ -182,7 +193,7 @@ void handleControlChange(byte channel, byte number, byte value)
 
 //====================== MIDI ========================//
 
-//====================== LEDs ========================//
+//====================== LEDS ========================//
 
 void blinkEditLed()
 {
@@ -237,7 +248,20 @@ void stopBlinkLoopStates()
 	_ledsShuttedOff = false;
 }
 
-//====================== /LEDs ======================//
+//====================== /LEDS ======================//
+
+//===================== LOOPS =======================//
+
+void applyLoopStates(byte state)
+{
+	_loops.write(~state | state << 8);
+	delay(7);
+	//lay down the previous impulse
+	_loops.write(0x0000);
+}
+
+
+//==================== /LOOPS =======================//
 
 //basic config management
 void writeConfig()
@@ -275,8 +299,8 @@ void readConfig()
 
 void applyPatch(byte patch)
 {
-	//activateLoops(patch);
 	displayLoopStates(patch);
+	applyLoopStates(patch);
 }
 
 byte loadPatch(byte patchNumber)
@@ -381,7 +405,10 @@ void setup()
 	
 	debugPrintln("Setup user interface...");
 	setupUi();
-#if _DEBUG
+	debugPrintln("Setup loops...");
+	setupLoops();
+
+#ifdef _DEBUG
 	_ui.debug();
 #endif
 
