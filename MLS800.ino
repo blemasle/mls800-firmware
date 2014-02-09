@@ -150,9 +150,9 @@ void setupLoops()
 {
 	_loops.init();
 	//all ports to output
-	//port A : OFF port
+	//port A : ON port
 	_loops.portMode(0, 0x00);
-	//port B : ON port
+	//port B : OFF port
 	_loops.portMode(1, 0x00);
 }
 
@@ -254,7 +254,7 @@ void stopBlinkLoopStates()
 
 void applyLoopStates(byte state)
 {
-	_loops.write(~state | state << 8);
+	_loops.write(state | ~state << 8);
 	delay(7);
 	//lay down the previous impulse
 	_loops.write(0x0000);
