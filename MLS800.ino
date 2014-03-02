@@ -47,7 +47,9 @@ void endSerial()
 {
 	Serial.flush();
 	Serial.end();
+#ifdef __AVR_ATmega32U4__
 	MIDI.begin(MIDI_CHANNEL_OMNI);
+#endif
 }
 #else
 #define debugPrintln
@@ -89,9 +91,9 @@ byte debounceInput()
 byte debounceEdit()
 {
 	byte editBttnState = digitalRead(EDIT_BTTN_PIN);
+	edit = false;
 	if(editBttnState != _currentEditBttnState)
 	{
-		edit = false;
 		delay(DEBOUNCE_DELAY);
 		_currentEditBttnState = digitalRead(EDIT_BTTN_PIN);
 		return _currentEditBttnState;
@@ -122,6 +124,38 @@ void setupDisplay(SAA1064_DIM dim)
 	_display.init(DYNAMIC, dim);
 }
 
+//device specific interrupts configuration
+void setupInterrupts()
+{
+	//arduino uno/nano
+#ifdef __AVR_ATmega328P__
+	attachInterrupt(UI_INT, uiInterrupt, CHANGE);
+	attachInterrupt(EDIT_INT, editInterrupt, RISING);
+#endif
+	//arduino leonardo/micro
+#ifdef __AVR_ATmega32U4__
+	//INT6 is not supported by attachInterrupt function, so going into manual mode
+	EICRB |= (1 << ISC60) | (1 << ISC61); //RISING
+	EIMSK |= (1 << EDIT_INT); //activate int 6 on arduino pin 7
+
+	//pin change interrupt configuration
+	PCICR = 1; //enable pin change interrupt
+	PCMSK0 |= (1 << UI_INT); //enable pin change interrupt on arduino pin 8
+#endif
+}
+
+#ifdef __AVR_ATmega32U4__
+ISR(INT6_vect)
+{
+	editInterrupt();
+}
+
+ISR(PCINT0_vect)
+{
+	uiInterrupt();
+}
+#endif
+
 //ui configuration
 void setupUi()
 {
@@ -137,13 +171,12 @@ void setupUi()
 	_ui.interrupt(UI_BTN_PORT, CHANGE);
 
 	_ui.clearInterrupts();
-	attachInterrupt(UI_INT, uiInterrupt, CHANGE);
 
 	//raw arduino pins configuration
 	pinMode(EDIT_BTTN_PIN, INPUT);
-	attachInterrupt(EDIT_INT, editInterrupt, RISING);
-
 	pinMode(EDIT_LED_PIN, OUTPUT);
+
+	setupInterrupts();
 }
 
 void setupLoops()
@@ -258,6 +291,8 @@ void applyLoopStates(byte state)
 	delay(7);
 	//lay down the previous impulse
 	_loops.write(0x0000);
+	debugPrint("applied state : ");
+	debugPrintln(state);
 }
 
 
@@ -392,6 +427,20 @@ void displayPatchNumber(byte nb)
 
 void setup()
 {
+#if defined(__AVR_ATmega32U4__) && defined(_DEBUG)
+	//arduino leornardo/micro : waiting for serial monitor to be opened
+	//in debug mode
+	int i = 0;
+	Serial.begin(9600);
+	while(!Serial) {
+		digitalWrite(EDIT_LED_PIN, HIGH);
+		delay(500);
+		digitalWrite(EDIT_LED_PIN, LOW);
+		delay(100);
+	}
+#endif
+
+	debugPrintln("Starting...");
 	Wire.begin();
 	debugPrintln("Setup storage...");
 	setupStorage();
@@ -443,6 +492,7 @@ void loop()
 
 	if(edit && (bttn = debounceEdit()) != LOW)
 	{
+		_currentEditBttnState = LOW;
 		debugPrintln("Edit pressed");
 		swichState();
 	}

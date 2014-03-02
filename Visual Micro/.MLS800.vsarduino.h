@@ -1,7 +1,7 @@
 #ifndef _VSARDUINO_H_
 #define _VSARDUINO_H_
-//Board = Arduino Nano w/ ATmega328
-#define __AVR_ATmega328P__
+//Board = Arduino Micro
+#define __AVR_ATmega32U4__
 #define 
 #define _DEBUG 1
 #define ARDUINO 105
@@ -41,6 +41,7 @@ byte debounceEdit();
 void setupStorage();
 void setupPatchManager();
 void setupDisplay(SAA1064_DIM dim);
+void setupInterrupts();
 void setupUi();
 void setupLoops();
 void setupMidi();
@@ -68,7 +69,7 @@ void displayPatchNumber(byte nb);
 //
 //
 
-#include "C:\Apps\Development\IDE\Arduino\hardware\arduino\variants\eightanaloginputs\pins_arduino.h" 
+#include "C:\Apps\Development\IDE\Arduino\hardware\arduino\variants\micro\pins_arduino.h" 
 #include "C:\Apps\Development\IDE\Arduino\hardware\arduino\cores\arduino\arduino.h"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800.ino"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800.h"
