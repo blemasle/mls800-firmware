@@ -156,8 +156,8 @@ ISR(PCINT0_vect)
 }
 #endif
 
-//ui configuration
-void setupUi()
+//io configuration
+void setupIo()
 {
 	_ui.init();
 
@@ -453,7 +453,7 @@ void setup()
 	_display.display(_config.version);
 	
 	debugPrintln("Setup user interface...");
-	setupUi();
+	setupIo();
 	debugPrintln("Setup loops...");
 	setupLoops();
 

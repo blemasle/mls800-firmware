@@ -42,7 +42,7 @@ void setupStorage();
 void setupPatchManager();
 void setupDisplay(SAA1064_DIM dim);
 void setupInterrupts();
-void setupUi();
+void setupIo();
 void setupLoops();
 void setupMidi();
 void handleProgramChange(byte channel, byte number);
@@ -69,8 +69,8 @@ void displayPatchNumber(byte nb);
 //
 //
 
-#include "C:\Apps\Development\IDE\Arduino\hardware\arduino\variants\micro\pins_arduino.h" 
-#include "C:\Apps\Development\IDE\Arduino\hardware\arduino\cores\arduino\arduino.h"
+#include "C:\Apps\Development\IDE\Arduino-1.0.5\hardware\arduino\variants\micro\pins_arduino.h" 
+#include "C:\Apps\Development\IDE\Arduino-1.0.5\hardware\arduino\cores\arduino\arduino.h"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800.ino"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800.h"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800_version.h"
