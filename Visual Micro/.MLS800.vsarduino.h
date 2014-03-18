@@ -1,10 +1,12 @@
 #ifndef _VSARDUINO_H_
 #define _VSARDUINO_H_
-//Board = Arduino Micro
+//Board = Arduino Micro (arcore)
 #define __AVR_ATmega32U4__
+#define USB_VID 0x2341
+#define USB_PID 0x8037
 #define 
 #define _DEBUG 1
-#define ARDUINO 105
+#define ARDUINO 150
 #define ARDUINO_MAIN
 #define __AVR__
 #define F_CPU 16000000L
@@ -69,8 +71,8 @@ void displayPatchNumber(byte nb);
 //
 //
 
-#include "C:\Apps\Development\IDE\Arduino-1.0.5\hardware\arduino\variants\micro\pins_arduino.h" 
-#include "C:\Apps\Development\IDE\Arduino-1.0.5\hardware\arduino\cores\arduino\arduino.h"
+#include "C:\Apps\Development\IDE\Arduino\hardware\arcore\avr\variants\micro\pins_arduino.h" 
+#include "C:\Apps\Development\IDE\Arduino\hardware\arcore\avr\cores\arcore\arduino.h"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800.ino"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800.h"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800_version.h"
