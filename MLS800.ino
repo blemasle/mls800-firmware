@@ -23,7 +23,7 @@ byte _currentExitBttnState;
 
 byte _currentEditValue;
 
-byte _currentPortBValue;
+volatile uint8_t _currentPortBValue;
 
 long _previousMillis;
 long _previousEditLedMillis;
@@ -168,11 +168,11 @@ ISR(INT6_vect)
 
 ISR(PCINT0_vect)
 {
-	byte capturePortBValue = PORTB;
-	if(capturePortBValue ^ EXIT_INT_PIN) exitInterrupt();
-	else if(capturePortBValue ^ UI_INT_PIN) uiInterrupt();	
+	uint8_t capturePortBValue = PINB ^ _currentPortBValue;
+	_currentPortBValue = PINB;
 
-	_currentPortBValue = capturePortBValue;
+	if(capturePortBValue & (1 << EXIT_INT_PIN)) exitInterrupt();
+	if(capturePortBValue & (1 << UI_INT_PIN)) uiInterrupt();
 }
 
 //io configuration
@@ -524,6 +524,8 @@ void loop()
 		debugPrintln("Exit pressed");
 		//swichState();
 	}
+
+	//debugPrintln(_currentPortBValue);
 
 	//handle user ui
 	if(_blinkLoopStates) blinkLoopStates();

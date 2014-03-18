@@ -22,10 +22,10 @@
 #define UI_LEDS_PORT 0
 
 #define UI_INT PCINT4
-#define UI_INT_PIN PORTB4
+#define UI_INT_PIN PINB4
 
 #define EXIT_INT PCINT5
-#define EXIT_INT_PIN PORTB5
+#define EXIT_INT_PIN PINB5
 #define EXIT_BTTN_PIN 9
 
 #define EDIT_INT INT6
