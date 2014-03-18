@@ -19,8 +19,11 @@ byte _editingValue;
 byte _currentLoopStates;
 byte _currentInputStates;
 byte _currentEditBttnState;
+byte _currentExitBttnState;
 
 byte _currentEditValue;
+
+byte _currentPortBValue;
 
 long _previousMillis;
 long _previousEditLedMillis;
@@ -33,6 +36,7 @@ bool _blinkDisplay;
 
 volatile bool input = false;
 volatile bool edit = false;
+volatile bool exitFlag = false;
 
 #ifdef _DEBUG
 #define debugPrintln(msg) startSerial();Serial.println(msg);endSerial();
@@ -65,6 +69,11 @@ void editInterrupt()
 	edit = true;
 }
 
+void exitInterrupt()
+{
+	exitFlag = true;
+}
+
 //debounce user input and clear interrupts
 byte debounceInput()
 {
@@ -88,6 +97,7 @@ byte debounceInput()
 
 byte debounceEdit()
 {
+	debugPrintln("debounce edit");
 	byte editBttnState = digitalRead(EDIT_BTTN_PIN);
 	edit = false;
 	if(editBttnState != _currentEditBttnState)
@@ -95,6 +105,22 @@ byte debounceEdit()
 		delay(DEBOUNCE_DELAY);
 		_currentEditBttnState = digitalRead(EDIT_BTTN_PIN);
 		return _currentEditBttnState;
+	}
+
+	//return actual state only on debounced RISING
+	return LOW;
+}
+
+byte debounceExit()
+{
+	debugPrintln("debounce exit");
+	byte exitBttnState = digitalRead(EXIT_BTTN_PIN);
+	exitFlag = false;
+	if(exitBttnState != _currentExitBttnState)
+	{
+		delay(DEBOUNCE_DELAY);
+		_currentExitBttnState = digitalRead(EXIT_BTTN_PIN);
+		return _currentExitBttnState;
 	}
 
 	//return actual state only on debounced RISING
@@ -132,6 +158,7 @@ void setupInterrupts()
 	//pin change interrupt configuration
 	PCICR = 1; //enable pin change interrupt
 	PCMSK0 |= (1 << UI_INT); //enable pin change interrupt on arduino pin 8
+	PCMSK0 |= (1 << EXIT_INT); //enable pin change interrupt on arduino pin 9
 }
 
 ISR(INT6_vect)
@@ -141,7 +168,11 @@ ISR(INT6_vect)
 
 ISR(PCINT0_vect)
 {
-	uiInterrupt();
+	byte capturePortBValue = PORTB;
+	if(capturePortBValue ^ EXIT_INT_PIN) exitInterrupt();
+	else if(capturePortBValue ^ UI_INT_PIN) uiInterrupt();	
+
+	_currentPortBValue = capturePortBValue;
 }
 
 //io configuration
@@ -162,6 +193,8 @@ void setupIo()
 
 	//raw arduino pins configuration
 	pinMode(EDIT_BTTN_PIN, INPUT);
+	pinMode(EXIT_BTTN_PIN, INPUT);
+
 	pinMode(EDIT_LED_PIN, OUTPUT);
 
 	setupInterrupts();
@@ -485,6 +518,13 @@ void loop()
 		swichState();
 	}
 	
+	if(exitFlag && (bttn = debounceExit()) != LOW)
+	{
+		_currentExitBttnState = LOW;
+		debugPrintln("Exit pressed");
+		//swichState();
+	}
+
 	//handle user ui
 	if(_blinkLoopStates) blinkLoopStates();
 	if(_blinkEditLed) blinkEditLed();
