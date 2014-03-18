@@ -47,9 +47,7 @@ void endSerial()
 {
 	Serial.flush();
 	Serial.end();
-#ifdef __AVR_ATmega32U4__
 	MIDI.begin(MIDI_CHANNEL_OMNI);
-#endif
 }
 #else
 #define debugPrintln
@@ -127,13 +125,6 @@ void setupDisplay(SAA1064_DIM dim)
 //device specific interrupts configuration
 void setupInterrupts()
 {
-	//arduino uno/nano
-#ifdef __AVR_ATmega328P__
-	attachInterrupt(UI_INT, uiInterrupt, CHANGE);
-	attachInterrupt(EDIT_INT, editInterrupt, RISING);
-#endif
-	//arduino leonardo/micro
-#ifdef __AVR_ATmega32U4__
 	//INT6 is not supported by attachInterrupt function, so going into manual mode
 	EICRB |= (1 << ISC60) | (1 << ISC61); //RISING
 	EIMSK |= (1 << EDIT_INT); //activate int 6 on arduino pin 7
@@ -141,10 +132,8 @@ void setupInterrupts()
 	//pin change interrupt configuration
 	PCICR = 1; //enable pin change interrupt
 	PCMSK0 |= (1 << UI_INT); //enable pin change interrupt on arduino pin 8
-#endif
 }
 
-#ifdef __AVR_ATmega32U4__
 ISR(INT6_vect)
 {
 	editInterrupt();
@@ -154,7 +143,6 @@ ISR(PCINT0_vect)
 {
 	uiInterrupt();
 }
-#endif
 
 //io configuration
 void setupIo()
@@ -427,7 +415,7 @@ void displayPatchNumber(byte nb)
 
 void setup()
 {
-#if defined(__AVR_ATmega32U4__) && defined(_DEBUG)
+#if defined(_DEBUG)
 	//arduino leornardo/micro : waiting for serial monitor to be opened
 	//in debug mode
 	int i = 0;

@@ -20,19 +20,11 @@
 
 #define UI_BTN_PORT 1
 #define UI_LEDS_PORT 0
-#ifdef __AVR_ATmega32U4__
-#define UI_INT PCINT4
-#else
-#define UI_INT 1
-#endif
 
-#ifdef __AVR_ATmega32U4__
+#define UI_INT PCINT4
+
 #define EDIT_INT INT6
 #define EDIT_BTTN_PIN 7
-#else
-#define EDIT_INT 0
-#define EDIT_BTTN_PIN 2
-#endif
 
 #define EDIT_LED_PIN 13
 
