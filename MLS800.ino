@@ -33,12 +33,14 @@ bool _displayShuttedOff = true;
 bool _blinkLoopStates;
 bool _blinkEditLed;
 bool _blinkDisplay;
+bool _inMenu;
 
 volatile bool input = false;
 volatile bool edit = false;
 volatile bool exitFlag = false;
 
 #ifdef _DEBUG
+long debugLastMillis = millis();
 #define debugPrintln(msg) startSerial();Serial.println(msg);endSerial();
 #define debugPrint(msg) startSerial();Serial.print(msg);endSerial();
 void startSerial()
@@ -127,7 +129,129 @@ byte debounceExit()
 	return LOW;
 }
 
-//==================== /SETUP =======================//
+//==================== MENU =======================//
+
+MENU_ACTION menuDisplay(char* text)
+{
+	_inMenu = true;
+	_display.display(text);
+
+	return MENU_ACTION_NONE;
+}
+
+MENU_ACTION menuExit()
+{
+	_inMenu = false;
+	displayPatchNumber(_config.patchNumber);
+	return MENU_ACTION_NONE;
+}
+
+MENU_ACTION midiRDisplay(char* text)
+{
+	debugPrint("midirdisplay ");
+	debugPrintln(text);
+	printNumber(text, _config.rxChannel);
+	_display.display(text);
+	
+	debugPrint("midirdisplay after transform ");
+	debugPrintln(text);
+
+	return MENU_ACTION_NONE;
+}
+
+MENU_ACTION midiRBack()
+{
+	readConfig();
+	return MENU_ACTION_BACK;
+}
+
+MENU_ACTION midiRSave()
+{
+	writeConfig();
+	//TODO : switch midi channel
+	return MENU_ACTION_BACK;
+}
+
+MENU_ACTION midiRDown()
+{
+	if(_config.rxChannel == 0) _config.rxChannel = 16;
+	else _config.rxChannel = _config.rxChannel-- % 17;
+	
+	return MENU_ACTION_REFRESH;
+}
+
+MENU_ACTION midiRUp()
+{
+	_config.rxChannel = _config.rxChannel++ % 17;
+	
+	return MENU_ACTION_REFRESH;
+}
+
+MENU_ACTION dimDisplay(char* text)
+{
+	printNumber(text, 1);
+	_display.display(text);
+	
+	_display.setDim((SAA1064_DIM)_config.displayDim);
+	return MENU_ACTION_NONE;
+}
+
+MENU_ACTION dimBack()
+{
+	readConfig();
+	_display.setDim((SAA1064_DIM)_config.displayDim);
+	return MENU_ACTION_BACK;
+}
+
+MENU_ACTION dimSave()
+{
+	writeConfig();
+	
+	return MENU_ACTION_BACK;
+}
+
+MENU_ACTION dimDown()
+{
+	switch(_config.displayDim)
+	{
+	case MIN:
+		_config.displayDim = MAX;
+		break;
+	case MID:
+		_config.displayDim = MIN;
+		break;
+	case MAX:
+		_config.displayDim = MID;
+	}
+	
+	return MENU_ACTION_REFRESH;
+}
+
+MENU_ACTION dimUp()
+{
+	switch(_config.displayDim)
+	{
+	case MIN:
+		_config.displayDim = MID;
+		break;
+	case MID:
+		_config.displayDim = MAX;
+		break;
+	case MAX:
+		_config.displayDim = MIN;
+	}
+	
+	return MENU_ACTION_REFRESH;
+}
+
+MENU_ACTION factoryReset()
+{
+	return MENU_ACTION_NONE;
+}
+
+//==================== /MENU =======================//
+
+//==================== SETUP =======================//
 
 //storage configuration
 void setupStorage()
@@ -194,6 +318,7 @@ void setupIo()
 	//raw arduino pins configuration
 	pinMode(EDIT_BTTN_PIN, INPUT);
 	pinMode(EXIT_BTTN_PIN, INPUT);
+	pinMode(UI_PIN, INPUT);
 
 	pinMode(EDIT_LED_PIN, OUTPUT);
 
@@ -322,6 +447,10 @@ void applyLoopStates(byte state)
 //basic config management
 void writeConfig()
 {
+	debugPrint("saved config :\ndim : ");
+	debugPrintln(_config.displayDim);
+	debugPrint("midi rx : ");
+	debugPrintln(_config.rxChannel);
 	_storage.writeBlock(CONFIG_ADDR, _config);
 }
 
@@ -496,6 +625,14 @@ void setup()
 	digitalWrite(EDIT_LED_PIN, LOW);
 }
 
+#if _DEBUG
+int freeRam () {
+  extern int __heap_start, *__brkval; 
+  int v; 
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+}
+#endif
+
 void loop()
 {
 	byte bttn;
@@ -509,23 +646,37 @@ void loop()
 			_currentEditValue ^= bttn;
 			applyPatch(_currentEditValue);
 		}
+		else if(_inMenu)
+		{
+			switch(bttn)
+			{
+			case 1:
+				menu.MenuAction(MENU_ACTION_DOWN);
+				break;
+			case 2:
+				menu.MenuAction(MENU_ACTION_UP);
+				break;
+			}
+		}
 	}
 
 	if(edit && (bttn = debounceEdit()) != LOW)
 	{
 		_currentEditBttnState = LOW;
 		debugPrintln("Edit pressed");
-		swichState();
+		
+		if(_inMenu)menu.MenuAction(MENU_ACTION_SELECT);
+		else swichState();
 	}
 	
 	if(exitFlag && (bttn = debounceExit()) != LOW)
 	{
 		_currentExitBttnState = LOW;
 		debugPrintln("Exit pressed");
+		if(!_inMenu)menu.MenuAction(MENU_ACTION_SELECT);
+		else if(_inMenu)menu.MenuAction(MENU_ACTION_BACK);
 		//swichState();
 	}
-
-	//debugPrintln(_currentPortBValue);
 
 	//handle user ui
 	if(_blinkLoopStates) blinkLoopStates();
@@ -533,4 +684,17 @@ void loop()
 	if(_blinkDisplay) blinkDisplay();
 
 	MIDI.read();
+
+#if _DEBUG
+	if(millis() - debugLastMillis > 5000) 
+	{
+		debugLastMillis = millis();
+		debugPrint("free ram : ");
+		debugPrintln(freeRam());
+		debugPrint("in menu : ");
+		debugPrintln(_inMenu);
+		//debugPrint("portBValue : ")
+		//debugPrintln(_currentPortBValue);
+	}
+#endif
 }

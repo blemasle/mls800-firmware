@@ -9,6 +9,7 @@
 
 #include "MLS800_version.h"
 #include "PatchManager.h"
+#include "MLS800Menu.h"
 
 #define CONFIG_ADDR 0
 #define CONFIG_SEED "AUDR"
@@ -21,6 +22,7 @@
 #define UI_BTN_PORT 1
 #define UI_LEDS_PORT 0
 
+#define UI_PIN 8
 #define UI_INT PCINT4
 #define UI_INT_PIN PINB4
 

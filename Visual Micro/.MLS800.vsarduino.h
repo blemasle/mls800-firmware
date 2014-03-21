@@ -42,6 +42,19 @@ void exitInterrupt();
 byte debounceInput();
 byte debounceEdit();
 byte debounceExit();
+MENU_ACTION menuDisplay(char* text);
+MENU_ACTION menuExit();
+MENU_ACTION midiRDisplay(char* text);
+MENU_ACTION midiRBack();
+MENU_ACTION midiRSave();
+MENU_ACTION midiRDown();
+MENU_ACTION midiRUp();
+MENU_ACTION dimDisplay(char* text);
+MENU_ACTION dimBack();
+MENU_ACTION dimSave();
+MENU_ACTION dimDown();
+MENU_ACTION dimUp();
+MENU_ACTION factoryReset();
 void setupStorage();
 void setupPatchManager();
 void setupDisplay(SAA1064_DIM dim);
@@ -71,13 +84,18 @@ void swichState();
 void printNumber(char * s, byte nb);
 void displayPatchNumber(byte nb);
 //
+int freeRam ();
 //
 
 #include "C:\Apps\Development\IDE\Arduino\hardware\arcore\avr\variants\micro\pins_arduino.h" 
 #include "C:\Apps\Development\IDE\Arduino\hardware\arcore\avr\cores\arcore\arduino.h"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800.ino"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800.h"
+#include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800Menu.cpp"
+#include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800Menu.h"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\MLS800_version.h"
+#include "E:\LTouristDocuments\Development\Arduino\MLS800\Menu.cpp"
+#include "E:\LTouristDocuments\Development\Arduino\MLS800\Menu.h"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\PatchManager.cpp"
 #include "E:\LTouristDocuments\Development\Arduino\MLS800\PatchManager.h"
 #endif
