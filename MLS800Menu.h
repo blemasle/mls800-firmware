@@ -18,16 +18,16 @@ extern MenuItem memClrYes;
 extern MenuItem memClrNo;
 extern MenuItem memClrd;
 
-MENU_ACTION menuDisplay(char* text);
+MENU_ACTION menuDisplay(const char* text);
 MENU_ACTION menuExit();
 
-MENU_ACTION midiRDisplay(char* text);
+MENU_ACTION midiRDisplay(const char* text);
 MENU_ACTION midiRBack();
 MENU_ACTION midiRSave();
 MENU_ACTION midiRDown();
 MENU_ACTION midiRUp();
 
-MENU_ACTION dimDisplay(char* text);
+MENU_ACTION dimDisplay(const char* text);
 MENU_ACTION dimBack();
 MENU_ACTION dimSave();
 MENU_ACTION dimDown();

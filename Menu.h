@@ -16,7 +16,7 @@ struct MenuItem {
 	MenuItem* child;
 	MenuItem* prev;
 	MenuItem* next;
-	MENU_ACTION (*display)(char* text);
+	MENU_ACTION (*display)(const char* text);
 	MENU_ACTION (*select)();
 	MENU_ACTION (*back)();
 	MENU_ACTION (*down)();

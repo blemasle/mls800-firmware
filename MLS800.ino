@@ -131,7 +131,7 @@ byte debounceExit()
 
 //==================== MENU =======================//
 
-MENU_ACTION menuDisplay(char* text)
+MENU_ACTION menuDisplay(const char* text)
 {
 	_inMenu = true;
 	_display.display(text);
@@ -146,10 +146,12 @@ MENU_ACTION menuExit()
 	return MENU_ACTION_NONE;
 }
 
-MENU_ACTION midiRDisplay(char* text)
+MENU_ACTION midiRDisplay(const char* text)
 {
-	printNumber(text, _config.rxChannel);
-	_display.display(text);
+	char* alteredText = strdup(text);
+	printNumber(alteredText, _config.rxChannel);
+	_display.display(alteredText);
+	free(alteredText);
 
 	return MENU_ACTION_NONE;
 }
@@ -182,11 +184,13 @@ MENU_ACTION midiRUp()
 	return MENU_ACTION_REFRESH;
 }
 
-MENU_ACTION dimDisplay(char* text)
+MENU_ACTION dimDisplay(const char* text)
 {
-	printNumber(text, 1);
-	_display.display(text);
-	
+	char* alteredText = strdup(text);
+	printNumber(alteredText, 1);
+	_display.display(alteredText);
+	free(alteredText);
+
 	_display.setDim((SAA1064_DIM)_config.displayDim);
 	return MENU_ACTION_NONE;
 }
