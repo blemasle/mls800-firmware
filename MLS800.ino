@@ -558,7 +558,8 @@ void swichState() {
 
 void printNumber(char * s, byte nb)
 {
-	itoa(nb, nb > 99 ? s + 1 : nb > 9 ? s + 2 : s + 3, 10);
+	byte pos = nb > 99 ? 3 : nb > 9 ? 2 : 1;
+	itoa(nb, s + strlen(s) - pos, 10);
 }
 
 void displayPatchNumber(byte nb)
