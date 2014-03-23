@@ -55,8 +55,8 @@ struct Config
 {
 	char seed[5];
 	char version[7];
-	byte rxChannel;
-	byte txChannel;
+	int8_t rxChannel;
+	int8_t txChannel;
 	byte patchNumber;
 	byte currentState;
 	byte displayDim;

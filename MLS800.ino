@@ -148,13 +148,8 @@ MENU_ACTION menuExit()
 
 MENU_ACTION midiRDisplay(char* text)
 {
-	debugPrint("midirdisplay ");
-	debugPrintln(text);
 	printNumber(text, _config.rxChannel);
 	_display.display(text);
-	
-	debugPrint("midirdisplay after transform ");
-	debugPrintln(text);
 
 	return MENU_ACTION_NONE;
 }
@@ -174,15 +169,15 @@ MENU_ACTION midiRSave()
 
 MENU_ACTION midiRDown()
 {
-	if(_config.rxChannel == 0) _config.rxChannel = 16;
-	else _config.rxChannel = _config.rxChannel-- % 17;
-	
+	_config.rxChannel = --_config.rxChannel % 17;
+	if(_config.rxChannel < 0) _config.rxChannel += 17;
+
 	return MENU_ACTION_REFRESH;
 }
 
 MENU_ACTION midiRUp()
 {
-	_config.rxChannel = _config.rxChannel++ % 17;
+	_config.rxChannel = ++_config.rxChannel % 17;
 	
 	return MENU_ACTION_REFRESH;
 }
