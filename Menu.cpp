@@ -40,11 +40,11 @@ void Menu::MenuAction(MENU_ACTION action)
 	{
 	case MENU_ACTION_UP:
 		if(_current->up) result = _current->up();
-		else result = MENU_ACTION_NONE;
+		else result = action;
 		break;
 	case MENU_ACTION_DOWN:
 		if(_current->down) result = _current->down();
-		else result = MENU_ACTION_NONE;
+		else result = action;
 		break;
 	case MENU_ACTION_SELECT:
 		if(_current->select) result = _current->select();

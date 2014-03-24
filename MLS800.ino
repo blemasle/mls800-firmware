@@ -187,9 +187,21 @@ MENU_ACTION midiRUp()
 MENU_ACTION dimDisplay(const char* text)
 {
 	char* alteredText = strdup(text);
-	printNumber(alteredText, 1);
 	_display.display(alteredText);
 	free(alteredText);
+	
+	switch(_config.displayDim)
+	{
+	case MIN:
+		_display.display(4, 0x08);
+		break;
+	case MID:
+		_display.display(4, 0x48);
+		break;
+	case MAX:
+		_display.display(4, 0x49);
+		break;
+	}
 
 	_display.setDim((SAA1064_DIM)_config.displayDim);
 	return MENU_ACTION_NONE;
