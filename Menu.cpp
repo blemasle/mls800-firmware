@@ -19,6 +19,9 @@ void endSerial2()
 	Serial.flush();
 	Serial.end();
 }
+#else
+#define debugPrintln
+#define debugPrint
 #endif
 
 Menu::Menu(MenuItem* root)
