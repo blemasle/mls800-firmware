@@ -1,0 +1,6 @@
+**/Debug
+**/*.sdf
+**/*.opensdf
+**/*.suo
+**/.vmprogram
+**/ipch
