@@ -212,15 +212,16 @@ MENU_ACTION dimSave()
 
 MENU_ACTION dimDown()
 {
-	_config.displayDim--;
-	
+	_config.displayDim = --_config.displayDim % 16;
+	if (_config.displayDim < 0) _config.displayDim += 16;
+
 	return MENU_ACTION_REFRESH;
 }
 
 MENU_ACTION dimUp()
 {
-	_config.displayDim++;
-	
+	_config.displayDim = ++_config.displayDim % 16;
+
 	return MENU_ACTION_REFRESH;
 }
 
