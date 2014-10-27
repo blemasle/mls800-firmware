@@ -5,7 +5,7 @@
 	        all non-arduino files created by visual micro and all visual studio project or solution files can be freely deleted and are not required to compile a sketch (do not delete your own code!).
 	        note: debugger breakpoints are stored in '.sln' or '.asln' files, knowledge of last uploaded breakpoints is stored in the upload.vmps.xml file. Both files are required to continue a previous debug session without needing to compile and upload again
 	
-	Hardware: Arduino Micro, Platform=avr, Package=arduino
+	Hardware: Arduino Micro (arcore), Platform=avr, Package=arcore
 */
 
 #ifndef _VSARDUINO_H_
@@ -16,13 +16,12 @@
 #define USB_PID 0x8037
 #define USB_MANUFACTURER 
 #define USB_PRODUCT "\"Arduino Micro\""
-#define ARDUINO 157
+#define ARDUINO 155
 #define ARDUINO_MAIN
 #define __AVR__
 #define __avr__
 #define F_CPU 16000000L
 #define _MCP23017_INTERRUPT_SUPPORT_
-#define _MCP23017_INTERRUPT_DEBOUNCE_
 #define __cplusplus
 #define __inline__
 #define __asm__(x)
@@ -98,15 +97,15 @@ void displayPatchNumber(byte nb);
 int freeRam ();
 //
 
-#include "C:\Apps\Dev\IDE\Arduino\hardware\arduino\avr\cores\arduino\arduino.h"
-#include "C:\Apps\Dev\IDE\Arduino\hardware\arduino\avr\variants\micro\pins_arduino.h" 
-#include "D:\LTouristDocuments\Development\Arduino\MLS800\MLS800.ino"
-#include "D:\LTouristDocuments\Development\Arduino\MLS800\MLS800.h"
-#include "D:\LTouristDocuments\Development\Arduino\MLS800\MLS800Menu.cpp"
-#include "D:\LTouristDocuments\Development\Arduino\MLS800\MLS800Menu.h"
-#include "D:\LTouristDocuments\Development\Arduino\MLS800\MLS800_version.h"
-#include "D:\LTouristDocuments\Development\Arduino\MLS800\Menu.cpp"
-#include "D:\LTouristDocuments\Development\Arduino\MLS800\Menu.h"
-#include "D:\LTouristDocuments\Development\Arduino\MLS800\PatchManager.cpp"
-#include "D:\LTouristDocuments\Development\Arduino\MLS800\PatchManager.h"
+#include "C:\Apps\Development\IDE\Arduino\hardware\arcore\avr\cores\arcore\arduino.h"
+#include "C:\Apps\Development\IDE\Arduino\hardware\arcore\avr\variants\micro\pins_arduino.h" 
+#include "E:\Working Copies\Arduino\mls800\MLS800.ino"
+#include "E:\Working Copies\Arduino\mls800\MLS800.h"
+#include "E:\Working Copies\Arduino\mls800\MLS800Menu.cpp"
+#include "E:\Working Copies\Arduino\mls800\MLS800Menu.h"
+#include "E:\Working Copies\Arduino\mls800\MLS800_version.h"
+#include "E:\Working Copies\Arduino\mls800\Menu.cpp"
+#include "E:\Working Copies\Arduino\mls800\Menu.h"
+#include "E:\Working Copies\Arduino\mls800\PatchManager.cpp"
+#include "E:\Working Copies\Arduino\mls800\PatchManager.h"
 #endif
