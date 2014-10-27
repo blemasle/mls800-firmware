@@ -1,13 +1,13 @@
 #include "MLS800.h"
 #include <Wire.h>
 #include <MCP23017.h>
-#include <SAA1064.h>
+#include <AS1115.h>
 #include <E24LC256.h>
 #include <MIDI.h>
 
 MCP23017 _ui = MCP23017(UI_ADDR);
 E24LC256 _storage = E24LC256(STORAGE_ADDR);
-SAA1064 _display = SAA1064(DISPLAY_ADDR);
+AS1115 _display = AS1115(DISPLAY_ADDR);
 MCP23017 _loops = MCP23017(LOOP_ADDR);
 
 PatchManager _patchMngr = PatchManager(&_storage);
@@ -190,27 +190,16 @@ MENU_ACTION dimDisplay(const char* text)
 	_display.display(alteredText);
 	free(alteredText);
 	
-	switch(_config.displayDim)
-	{
-	case MIN:
-		_display.display(4, 0x08);
-		break;
-	case MID:
-		_display.display(4, 0x48);
-		break;
-	case MAX:
-		_display.display(4, 0x49);
-		break;
-	}
+	_display.display(3, _config.displayDim);	
 
-	_display.setDim((SAA1064_DIM)_config.displayDim);
+	_display.setIntensity(_config.displayDim);
 	return MENU_ACTION_NONE;
 }
 
 MENU_ACTION dimBack()
 {
 	readConfig();
-	_display.setDim((SAA1064_DIM)_config.displayDim);
+	_display.setIntensity(_config.displayDim);
 	return MENU_ACTION_BACK;
 }
 
@@ -223,34 +212,14 @@ MENU_ACTION dimSave()
 
 MENU_ACTION dimDown()
 {
-	switch(_config.displayDim)
-	{
-	case MIN:
-		_config.displayDim = MAX;
-		break;
-	case MID:
-		_config.displayDim = MIN;
-		break;
-	case MAX:
-		_config.displayDim = MID;
-	}
+	_config.displayDim--;
 	
 	return MENU_ACTION_REFRESH;
 }
 
 MENU_ACTION dimUp()
 {
-	switch(_config.displayDim)
-	{
-	case MIN:
-		_config.displayDim = MID;
-		break;
-	case MID:
-		_config.displayDim = MAX;
-		break;
-	case MAX:
-		_config.displayDim = MIN;
-	}
+	_config.displayDim++;
 	
 	return MENU_ACTION_REFRESH;
 }

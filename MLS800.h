@@ -15,7 +15,7 @@
 #define CONFIG_SEED "AUDR"
 
 #define UI_ADDR 0x20
-#define DISPLAY_ADDR 0x38
+#define DISPLAY_ADDR 0x03
 #define STORAGE_ADDR 0x50
 #define LOOP_ADDR 0x24
 
