@@ -187,10 +187,9 @@ MENU_ACTION midiRUp()
 MENU_ACTION dimDisplay(const char* text)
 {
 	char* alteredText = strdup(text);
+	printNumber(alteredText, _config.displayDim);
 	_display.display(alteredText);
 	free(alteredText);
-	
-	_display.display(3, _config.displayDim);	
 
 	_display.setIntensity(_config.displayDim);
 	return MENU_ACTION_NONE;
@@ -211,7 +210,7 @@ MENU_ACTION dimSave()
 }
 
 MENU_ACTION dimDown()
-{
+{	
 	_config.displayDim = --_config.displayDim % 16;
 	if (_config.displayDim < 0) _config.displayDim += 16;
 
@@ -248,9 +247,9 @@ void setupPatchManager()
 
 
 //display configuration
-void setupDisplay(SAA1064_DIM dim)
+void setupDisplay(byte dim)
 {
-	_display.init(DYNAMIC, dim);
+	_display.init(4, dim);
 }
 
 //device specific interrupts configuration
@@ -444,7 +443,7 @@ void resetConfig()
 		MIDI_CHANNEL_OFF,
 		0,
 		0,
-		(byte)MID
+		8
 	};
 
 	_config = config;
@@ -581,7 +580,7 @@ void setup()
 	debugPrintln("Setup patch manager...");
 	setupPatchManager();
 	debugPrintln("Setup display...");
-	setupDisplay((SAA1064_DIM)_config.displayDim);
+	setupDisplay(_config.displayDim);
 	_display.display(_config.version);
 	
 	debugPrintln("Setup user interface...");
@@ -590,7 +589,7 @@ void setup()
 	setupLoops();
 
 #ifdef _DEBUG
-	_ui.debug();
+	//_ui.debug();
 #endif
 
 	debugPrint("Loading patch ");

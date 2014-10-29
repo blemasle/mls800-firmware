@@ -66,7 +66,7 @@ MenuItem dim = {
 };
 
 MenuItem dim_Edit = {
-	"dim. ",
+	"d.   ",
 	&dim,
 	0,
 	0,

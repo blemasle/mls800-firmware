@@ -22,6 +22,8 @@
 #define __avr__
 #define F_CPU 16000000L
 #define _MCP23017_INTERRUPT_SUPPORT_
+#define _DEBUG
+#define _AS1115_DIAGNOSTICS_
 #define __cplusplus
 #define __inline__
 #define __asm__(x)
@@ -67,7 +69,7 @@ MENU_ACTION dimUp();
 MENU_ACTION factoryReset();
 void setupStorage();
 void setupPatchManager();
-void setupDisplay(SAA1064_DIM dim);
+void setupDisplay(byte dim);
 void setupInterrupts();
 void setupIo();
 void setupLoops();
