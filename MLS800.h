@@ -26,12 +26,8 @@
 #define UI_INT PCINT4
 #define UI_INT_PIN PINB4
 
-#define EXIT_INT PCINT5
-#define EXIT_INT_PIN PINB5
-#define EXIT_BTTN_PIN 9
-
-#define EDIT_INT INT6
-#define EDIT_BTTN_PIN 7
+#define EXIT_BTTN 11
+#define EDIT_BTTN 12
 
 #define EDIT_LED_PIN 13
 
@@ -43,6 +39,13 @@
 #define PATCHES_ADDR E24LC256_PAGESIZE
 #define PATCH_COUNT 128
 #define CC_COUNT 128
+
+#ifndef cbi
+#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+#endif
+#ifndef sbi
+#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+#endif
 
 enum DeviceState
 {
