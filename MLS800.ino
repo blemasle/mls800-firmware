@@ -598,6 +598,18 @@ void loop()
 					break;
 				}
 			}
+			else if (_mode == PLAYING) {
+				//up and down button to manually switch patch
+				switch (bttn)
+				{
+				case 7:
+					handleProgramChange(0, _config.patchNumber - 1);
+					break;
+				case 8:
+					handleProgramChange(0, _config.patchNumber + 1);
+					break;
+				}
+			}
 		}
 		else {
 			switch (bttn) {
