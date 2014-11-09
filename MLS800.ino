@@ -93,7 +93,7 @@ byte readInput()
 MENU_ACTION menuDisplay(const char* text)
 {
 	_inMenu = true;
-	_display.display(text);
+	_display.display(text, false);
 
 	return MENU_ACTION_NONE;
 }
@@ -109,7 +109,7 @@ MENU_ACTION midiRDisplay(const char* text)
 {
 	char* alteredText = strdup(text);
 	printNumber(alteredText, _config.rxChannel);
-	_display.display(alteredText);
+	_display.display(alteredText, false);
 	free(alteredText);
 
 	return MENU_ACTION_NONE;
@@ -147,7 +147,7 @@ MENU_ACTION dimDisplay(const char* text)
 {
 	char* alteredText = strdup(text);
 	printNumber(alteredText, _config.displayDim);
-	_display.display(alteredText);
+	_display.display(alteredText, false);
 	free(alteredText);
 
 	_display.setIntensity(_config.displayDim);
@@ -208,7 +208,7 @@ void setupPatchManager()
 //display configuration
 void setupDisplay(byte dim)
 {
-	_display.init(4, dim);
+	_display.init(5, dim);
 	//reset any pending interrupt
 	_display.read();
 }
@@ -318,7 +318,7 @@ void blinkDisplay()
 	long currentMillis = millis();
 	if(currentMillis - _previousDisplayMillis > BLINK_DELAY_HIGH) {
 		if(_displayShuttedOff) displayPatchNumber(_config.patchNumber);
-		else _display.clear();
+		else clearDisplay();
 
 		_displayShuttedOff = !_displayShuttedOff;
 		_previousDisplayMillis = currentMillis;
@@ -332,9 +332,15 @@ void stopBlinkDisplay()
 	_displayShuttedOff = true;
 }
 
+void clearDisplay() {
+	_display.clear();
+	displayLoopStates(_config.currentState);
+}
+
 void displayLoopStates(byte state)
 {
-	_ui.writePort(UI_LEDS_PORT, state);
+	_display.display(5, state);
+	//_ui.writePort(UI_LEDS_PORT, state);
 }
 
 void blinkLoopStates()
@@ -510,7 +516,7 @@ void displayPatchNumber(byte nb)
 {
 	char str[5] = "P   ";
 	printNumber(str, nb);
-	_display.display(str);
+	_display.display(str, false);
 }
 
 //===================== /DISPLAY =====================//

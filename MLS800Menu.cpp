@@ -53,7 +53,7 @@ MenuItem midiR_Edit = {
 };
 
 MenuItem dim = {
-	"dim",
+	"dim ",
 	&root,
 	&dim_Edit,
 	&midi,
@@ -79,7 +79,7 @@ MenuItem dim_Edit = {
 };
 
 MenuItem memClr = {
-	"clr",
+	"clr ",
 	&root,
 	&memClrYes,
 	&dim,
@@ -92,7 +92,7 @@ MenuItem memClr = {
 };
 
 MenuItem memClrYes = {
-	"yes",
+	"yes ",
 	&memClr,
 	0,
 	&memClrNo,
@@ -105,7 +105,7 @@ MenuItem memClrYes = {
 };
 
 MenuItem memClrNo = {
-	"no",
+	"no  ",
 	&memClr,
 	0,
 	&memClrYes,
