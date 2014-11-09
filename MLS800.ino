@@ -53,7 +53,7 @@ void endSerial()
 {
 	Serial.flush();
 	Serial.end();
-	MIDI.begin(MIDI_CHANNEL_OMNI);
+	MIDI.begin(_config.rxChannel);
 }
 #else
 #define debugPrintln
@@ -124,6 +124,8 @@ MENU_ACTION midiRBack()
 MENU_ACTION midiRSave()
 {
 	writeConfig();
+	//Serial.end();
+	//MIDI.begin(_config.rxChannel);
 	//TODO : switch midi channel
 	return MENU_ACTION_BACK;
 }
@@ -267,7 +269,7 @@ void setupLoops()
 
 void setupMidi()
 {
-	MIDI.begin(MIDI_CHANNEL_OMNI);
+	MIDI.begin(_config.rxChannel);
 	MIDI.setHandleControlChange(handleControlChange);
 	MIDI.setHandleProgramChange(handleProgramChange);
 }
