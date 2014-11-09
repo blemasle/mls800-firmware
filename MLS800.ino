@@ -602,10 +602,10 @@ void loop()
 				//up and down button to manually switch patch
 				switch (bttn)
 				{
-				case 7:
+				case DOWN_BTTN:
 					handleProgramChange(0, _config.patchNumber - 1);
 					break;
-				case 8:
+				case UP_BTTN:
 					handleProgramChange(0, _config.patchNumber + 1);
 					break;
 				}
