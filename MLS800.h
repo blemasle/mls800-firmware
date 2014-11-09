@@ -26,8 +26,11 @@
 #define UI_INT PCINT4
 #define UI_INT_PIN PINB4
 
-#define EDIT_BTTN 9
-#define EXIT_BTTN 10
+#define EDIT_BTTN 3
+#define EXIT_BTTN 4
+
+#define DOWN_BTTN 15
+#define UP_BTTN 16
 
 #define EDIT_LED_PIN 13
 

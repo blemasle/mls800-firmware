@@ -368,7 +368,7 @@ void applyLoopStates(byte state)
 	//lay down the previous impulse
 	_loops.write(0x0000);
 	debugPrint("applied state : ");
-	debugPrintln(state);
+	debugPrintlnBase(state, BIN);
 }
 
 
@@ -580,20 +580,20 @@ void loop()
 	{
 		debugPrint("Interrupted by :");
 		debugPrintln(bttn);
-		if (bttn < EDIT_BTTN) {
+		if (bttn > EXIT_BTTN) {
 			if (_mode == EDITING)
 			{
-				_currentEditValue ^= 1 << (bttn - 1);
+				_currentEditValue ^= 1 << (bttn - 9);
 				applyPatch(_currentEditValue);
 			}
 			else if(_inMenu)
 			{
 				switch(bttn)
 				{
-				case 7:
+				case DOWN_BTTN:
 					menu.MenuAction(MENU_ACTION_DOWN);
 					break;
-				case 8:
+				case UP_BTTN:
 					menu.MenuAction(MENU_ACTION_UP);
 					break;
 				}
