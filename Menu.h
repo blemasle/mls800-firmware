@@ -11,7 +11,7 @@ enum MENU_ACTION {
 };
 
 struct MenuItem {
-	char* text;
+	const char* text;
 	MenuItem* parent;
 	MenuItem* child;
 	MenuItem* prev;

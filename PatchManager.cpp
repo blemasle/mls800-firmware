@@ -43,7 +43,7 @@ bool PatchManager::save(byte patchNumber, byte ccNumber, byte value)
 bool PatchManager::validatePatchNumber(byte patchNumber, byte ccNumber)
 {
 	return patchNumber >= 0 && patchNumber < _patchesLength &&
-		(ccNumber >= 0 && ccNumber < _ccLength || ccNumber == CC_UNDEFINED);
+		((ccNumber >= 0 && ccNumber < _ccLength) || ccNumber == CC_UNDEFINED);
 }
 
 unsigned short PatchManager::getPatchAddress(byte patchNumber, byte ccNumber)

@@ -67,7 +67,6 @@ void setup()
 #ifdef _DEBUG
 	//arduino leornardo/micro : waiting for serial monitor to be opened
 	//in debug mode
-	int i = 0;
 	Serial.begin(9600);
 	while(!Serial) {
 		digitalWrite(EDIT_LED_PIN, HIGH);
