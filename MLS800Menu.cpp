@@ -1,5 +1,9 @@
  #include "MLS800Menu.h"
 
+//------------------------------------------------------
+// menu items declaration
+//------------------------------------------------------
+
 MenuItem root = {
 	"menu",
 	0,
@@ -132,7 +136,9 @@ MenuItem memClrd = {
 
 Menu menu = Menu(&root);
 
-//==================== MENU =======================//
+//------------------------------------------------------
+// menu implementations
+//------------------------------------------------------
 
 MENU_ACTION menuDisplay(const char* text)
 {
@@ -171,7 +177,6 @@ MENU_ACTION midiRSave()
 	//Serial.flush(); //needed ??
 	//Serial.end();
 	//MIDI.begin(_config.rxChannel);
-	//TODO : switch midi channel
 	return MENU_ACTION_BACK;
 }
 

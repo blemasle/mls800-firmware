@@ -80,7 +80,7 @@ void setup()
 	setupStorage();	
 	readConfig();	
 	setupPatchManager();	
-	initUi(_config.displayDim);
+	setupUi(_config.displayDim);
 	_display.display(_config.version);
 		
 	setupIo();	

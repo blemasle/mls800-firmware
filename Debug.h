@@ -16,10 +16,10 @@ extern long debugLastMillis;
 
 #else
 
-#define debugPrintln
-#define debugPrint
-#define debugPrintlnBase
-#define debugPrintBase
+#define debugPrintln(msg)
+#define debugPrint(msg)
+#define debugPrintlnBase(msg, base)
+#define debugPrintBase(msg, base)
 
 #endif
 

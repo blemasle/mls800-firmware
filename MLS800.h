@@ -132,7 +132,7 @@ void printNumber(char * s, byte nb);
 
 void setupStorage();
 void setupPatchManager();
-void initUi(byte dim);
+void setupUi(byte dim);
 void setupInterrupts();
 void setupIo();
 void setupLoops();
