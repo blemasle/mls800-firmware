@@ -1,11 +1,7 @@
 #ifndef _MLS800_h
 #define _MLS800_h
 
-#if ARDUINO >= 100
 #include <Arduino.h>
-#else
-#include <WProgram.h>
-#endif
 
 #include <Wire.h>
 #include <MCP23017.h>

@@ -1,13 +1,8 @@
 #ifndef _PatchManager_h
 #define _PatchManager_h
 
+#include "Arduino.h"
 #include <E24LC256.h>
-
-#if ARDUINO >= 100
-    #include "Arduino.h"
-#else
-    #include "WProgram.h"
-#endif
 
 #define PATCH_DEFAULT_VALUE 0
 #define PATCH_CC_DEFAULT_VALUE 0

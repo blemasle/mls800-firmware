@@ -1,9 +1,5 @@
-#include "Menu.h"
-#if ARDUINO >= 100
 #include <Arduino.h>
-#else
-#include <WProgram.h>
-#endif
+#include "Menu.h"
 
 #ifdef _DEBUG
 #define debugPrintln(msg) startSerial2();Serial.println(msg);endSerial2();

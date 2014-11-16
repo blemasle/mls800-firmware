@@ -1,11 +1,7 @@
 #ifndef _Debug_h
 #define _Debug_h
 
-#if ARDUINO >= 100
 #include <Arduino.h>
-#else
-#include <WProgram.h>
-#endif
 
 #ifdef _DEBUG
 
