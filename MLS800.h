@@ -2,7 +2,7 @@
 #define _MLS800_h
 
 //------------------------------------------------------
-// Includes
+// includes
 //------------------------------------------------------
 
 #include <Arduino.h>
@@ -21,7 +21,7 @@
 #include "Debug.h"
 
 //------------------------------------------------------
-// Defines
+// defines
 //------------------------------------------------------
 
 // external chips addresses
@@ -33,33 +33,42 @@
 #define CONFIG_ADDR 0
 #define CONFIG_SEED "AUDR"
 
+// config storage configuration
+#define PATCHES_ADDR E24LC256_PAGESIZE
+#define PATCH_COUNT 128
+#define CC_COUNT 128
+
+// user interface system definitions
 #define UI_PIN 8
 #define UI_INT PCINT4
 #define UI_INT_PIN PINB4
+#define EDIT_LED_PIN 13
 
+#define BLINK_DELAY_LOW 250
+#define BLINK_DELAY_HIGH 750
+
+// user input buttons
 #define EDIT_BTTN 3
 #define EXIT_BTTN 4
 
 #define DOWN_BTTN 15
 #define UP_BTTN 16
 
-#define EDIT_LED_PIN 13
+//------------------------------------------------------
+// macros
+//------------------------------------------------------
 
-#define DEBOUNCE_DELAY 100
-
-#define BLINK_DELAY_LOW 250
-#define BLINK_DELAY_HIGH 750
-
-#define PATCHES_ADDR E24LC256_PAGESIZE
-#define PATCH_COUNT 128
-#define CC_COUNT 128
-
+// clearing and setting bits macros
 #ifndef cbi
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 #endif
 #ifndef sbi
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
+
+//------------------------------------------------------
+// typedefs, enums, structs etc
+//------------------------------------------------------
 
 enum DeviceState
 {
@@ -78,6 +87,10 @@ struct Config
 	byte currentState;
 	byte displayDim;
 };
+
+//------------------------------------------------------
+// global variables
+//------------------------------------------------------
 
 extern byte _currentLoopStates;
 extern byte _currentInputStates;
@@ -104,6 +117,11 @@ extern E24LC256 _storage;
 extern AS1115 _display;
 extern MCP23017 _loops;
 extern PatchManager _patchMngr;
+
+
+//------------------------------------------------------
+// prototypes
+//------------------------------------------------------
 
 void writeConfig();
 void resetConfig();
