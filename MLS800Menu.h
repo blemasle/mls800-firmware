@@ -1,6 +1,7 @@
 #ifndef _MLS800_Menu_h
 #define _MLS800_Menu_h
 
+#include "MLS800.h"
 #include "Menu.h"
 
 extern Menu menu;

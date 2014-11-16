@@ -7,9 +7,16 @@
 #include <WProgram.h>
 #endif
 
+#include <Wire.h>
+#include <MCP23017.h>
+#include <AS1115.h>
+#include <E24LC256.h>
+#include <MIDI.h>
+
 #include "MLS800_version.h"
 #include "PatchManager.h"
 #include "MLS800Menu.h"
+#include "Debug.h"
 
 #define CONFIG_ADDR 0
 #define CONFIG_SEED "AUDR"
@@ -50,6 +57,9 @@
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
 
+
+
+
 enum DeviceState
 {
 	PLAYING,
@@ -67,5 +77,64 @@ struct Config
 	byte currentState;
 	byte displayDim;
 };
+
+
+extern byte _currentEditValue;
+extern long _previousMillis;
+extern long _previousEditLedMillis;
+extern long _previousDisplayMillis;
+extern bool _ledsShuttedOff;
+extern bool _displayShuttedOff;
+extern bool _blinkLoopStates;
+extern bool _blinkEditLed;
+extern bool _blinkDisplay;
+extern bool _inMenu;
+
+extern Config _config;
+extern DeviceState _mode;
+
+extern volatile bool input;
+
+extern MCP23017 _ui;
+extern E24LC256 _storage;
+extern AS1115 _display;
+extern MCP23017 _loops;
+extern PatchManager _patchMngr;
+
+void writeConfig();
+void resetConfig();
+void readConfig();
+
+void displayPatchNumber(byte nb);
+void printNumber(char * s, byte nb);
+
+void setupStorage();
+void setupPatchManager();
+void initUi(byte dim);
+void setupInterrupts();
+void setupIo();
+void setupLoops();
+void setupMidi();
+
+void handleProgramChange(byte channel, byte number);
+void handleControlChange(byte channel, byte number, byte value);
+
+void applyPatch(byte patch);
+byte loadPatch(byte patchNumber);
+
+void startLearning();
+void endLearning();
+void startEditing();
+void endEditing();
+void cancelEditing();
+void swichState();
+
+
+void blinkEditLed();
+void blinkDisplay();
+void stopBlinkDisplay();
+void displayLoopStates(byte state);
+void blinkLoopStates();
+void stopBlinkLoopStates();
 
 #endif

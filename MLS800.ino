@@ -23,8 +23,6 @@ byte _currentExitBttnState;
 
 byte _currentEditValue;
 
-volatile uint8_t _currentPortBValue;
-
 long _previousMillis;
 long _previousEditLedMillis;
 long _previousDisplayMillis;
@@ -36,37 +34,6 @@ bool _blinkDisplay;
 bool _inMenu;
 
 volatile bool input = false;
-
-#ifdef _DEBUG
-long debugLastMillis = millis();
-#define debugPrintln(msg) startSerial();Serial.println(msg);endSerial();
-#define debugPrint(msg) startSerial();Serial.print(msg);endSerial();
-#define debugPrintlnBase(msg, base) startSerial();Serial.println(msg, base);endSerial();
-#define debugPrintBase(msg, base) startSerial();Serial.print(msg, base);endSerial();
-void startSerial()
-{
-	Serial.end();
-	Serial.begin(115200);
-}
-
-void endSerial()
-{
-	Serial.flush();
-	Serial.end();
-	MIDI.begin(_config.rxChannel);
-}
-#else
-#define debugPrintln
-#define debugPrint
-#define debugPrintlnBase
-#define debugPrintBase
-#endif
-
-//interrupt handler for user input
-void inputInterrupt()
-{
-	input = true;
-}
 
 //read user input and map from the power of two to button number
 byte readInput()
@@ -87,222 +54,6 @@ byte readInput()
 
 	return value;
 }
-
-//==================== MENU =======================//
-
-MENU_ACTION menuDisplay(const char* text)
-{
-	_inMenu = true;
-	_display.display(text, false);
-
-	return MENU_ACTION_NONE;
-}
-
-MENU_ACTION menuExit()
-{
-	_inMenu = false;
-	displayPatchNumber(_config.patchNumber);
-	return MENU_ACTION_NONE;
-}
-
-MENU_ACTION midiRDisplay(const char* text)
-{
-	char* alteredText = strdup(text);
-	printNumber(alteredText, _config.rxChannel);
-	_display.display(alteredText, false);
-	free(alteredText);
-
-	return MENU_ACTION_NONE;
-}
-
-MENU_ACTION midiRBack()
-{
-	readConfig();
-	return MENU_ACTION_BACK;
-}
-
-MENU_ACTION midiRSave()
-{
-	writeConfig();
-	//Serial.end();
-	//MIDI.begin(_config.rxChannel);
-	//TODO : switch midi channel
-	return MENU_ACTION_BACK;
-}
-
-MENU_ACTION midiRDown()
-{
-	_config.rxChannel = --_config.rxChannel % 17;
-	if(_config.rxChannel < 0) _config.rxChannel += 17;
-
-	return MENU_ACTION_REFRESH;
-}
-
-MENU_ACTION midiRUp()
-{
-	_config.rxChannel = ++_config.rxChannel % 17;
-	
-	return MENU_ACTION_REFRESH;
-}
-
-MENU_ACTION dimDisplay(const char* text)
-{
-	char* alteredText = strdup(text);
-	printNumber(alteredText, _config.displayDim);
-	_display.display(alteredText, false);
-	free(alteredText);
-
-	_display.setIntensity(_config.displayDim);
-	return MENU_ACTION_NONE;
-}
-
-MENU_ACTION dimBack()
-{
-	readConfig();
-	_display.setIntensity(_config.displayDim);
-	return MENU_ACTION_BACK;
-}
-
-MENU_ACTION dimSave()
-{
-	writeConfig();
-	
-	return MENU_ACTION_BACK;
-}
-
-MENU_ACTION dimDown()
-{	
-	_config.displayDim = --_config.displayDim % 16;
-	if (_config.displayDim < 0) _config.displayDim += 16;
-
-	return MENU_ACTION_REFRESH;
-}
-
-MENU_ACTION dimUp()
-{
-	_config.displayDim = ++_config.displayDim % 16;
-
-	return MENU_ACTION_REFRESH;
-}
-
-MENU_ACTION factoryReset()
-{
-	return MENU_ACTION_NONE;
-}
-
-//==================== /MENU =======================//
-
-//==================== SETUP =======================//
-
-//storage configuration
-void setupStorage()
-{
-	//nothing to do yet
-}
-
-//patch manager configuration
-void setupPatchManager()
-{
-	_patchMngr.init(PATCHES_ADDR, PATCH_COUNT, CC_COUNT);
-}
-
-
-//display configuration
-void setupDisplay(byte dim)
-{
-	_display.init(5, dim);
-	//reset any pending interrupt
-	_display.read();
-}
-
-//device specific interrupts configuration
-void setupInterrupts()
-{
-	//INT6 is not supported by attachInterrupt function, so going into manual mode
-	//disable interrupt on INT6
-	cbi(EIMSK, INT6);
-
-	//interrupt INT6 on FALLING
-	cbi(EICRB, ISC60);
-	sbi(EICRB, ISC61);
-
-	//clear interruput flag for INT6
-	sbi(EIFR, INTF6);
-
-	//re enable INT6
-	sbi(EIMSK, INT6);
-}
-
-ISR(INT6_vect)
-{
-	inputInterrupt();
-}
-
-//io configuration
-void setupIo()
-{
-	_ui.init();
-
-	//port a : ouput
-	_ui.portMode(UI_LEDS_PORT, 0x00);
-
-	//port b : input
-	_ui.portMode(UI_BTN_PORT, 0xFF);
-
-	pinMode(UI_PIN, INPUT);
-	digitalWrite(UI_PIN, HIGH);
-
-	pinMode(EDIT_LED_PIN, OUTPUT);
-
-	setupInterrupts();
-}
-
-void setupLoops()
-{
-	_loops.init();
-	//all ports to output
-	//port A : ON port
-	_loops.portMode(0, 0x00);
-	//port B : OFF port
-	_loops.portMode(1, 0x00);
-}
-
-void setupMidi()
-{
-	MIDI.begin(_config.rxChannel);
-	MIDI.setHandleControlChange(handleControlChange);
-	MIDI.setHandleProgramChange(handleProgramChange);
-}
-
-//===================== /SETUP =======================//
-
-//====================== MIDI ========================//
-
-void handleProgramChange(byte channel, byte number)
-{
-	debugPrint("Program Change : ");
-	debugPrintln(number);
-	if(_mode == PLAYING)
-	{
-		_config.patchNumber = number;
-		loadPatch(_config.patchNumber);
-	}
-	else if(_mode == LEARNING) 
-	{
-		_config.patchNumber = number;
-		swichState();
-	}
-}
-
-void handleControlChange(byte channel, byte number, byte value)
-{
-	debugPrint("Control Change : ");
-	debugPrint(number);
-	debugPrint(" ");
-	debugPrintln(value);
-}
-
-//====================== MIDI ========================//
 
 //====================== LEDS ========================//
 
@@ -410,6 +161,7 @@ void resetConfig()
 
 void readConfig()
 {
+	debugPrintln("Reading configuration...");
 	_storage.readBlock(CONFIG_ADDR, _config);
 	if(!String(CONFIG_SEED).equals(_config.seed)) {
 		resetConfig();
@@ -422,6 +174,8 @@ void readConfig()
 
 void applyPatch(byte patch)
 {
+	debugPrint("Loading patch ");
+	debugPrintln(_config.patchNumber);
 	displayLoopStates(patch);
 	applyLoopStates(patch);
 }
@@ -442,69 +196,6 @@ byte loadPatch(byte patchNumber)
 }
 
 //==================== /PATCHES =======================//
-
-
-//====================== MODES =======================//
-
-void startLearning()
-{
-	_blinkEditLed = true;
-	_blinkDisplay = true;
-	_currentEditValue = _config.currentState;
-}
-
-void endLearning()
-{
-	displayPatchNumber(_config.patchNumber);
-}
-
-void startEditing()
-{
-	_blinkEditLed = false;
-	stopBlinkDisplay();
-	_currentEditValue = _config.currentState;
-	digitalWrite(EDIT_LED_PIN, HIGH);
-}
-
-void endEditing()
-{
-	_config.currentState = _currentEditValue;
-	writeConfig();
-	_patchMngr.save(_config.patchNumber, _config.currentState);
-	digitalWrite(EDIT_LED_PIN, LOW);
-}
-
-void cancelEditing()
-{
-	_blinkEditLed = false;
-	stopBlinkDisplay();
-	digitalWrite(EDIT_LED_PIN, LOW);
-	_mode = PLAYING;
-	loadPatch(_config.patchNumber);
-}
-
-void swichState() {
-	switch(_mode)
-	{
-	case PLAYING:
-		_mode = LEARNING;
-		startLearning();
-		break;
-	case LEARNING:
-		endLearning();
-		_mode = EDITING;
-		startEditing();
-		break;
-	case EDITING:
-		endEditing();
-		_mode = PLAYING;
-		break;
-	}
-	debugPrintln("Device State changed :");
-	debugPrintln(_mode == PLAYING ? "PLAYING" : _mode == LEARNING ? "LEARNING" : "EDITING");
-}
-
-//====================== /MODES ======================//
 
 //===================== DISPLAY ======================//
 
@@ -538,33 +229,20 @@ void setup()
 	}
 #endif
 
-	debugPrintln("Starting...");
-	Wire.begin();
-	debugPrintln("Setup storage...");
-	setupStorage();
-	debugPrintln("Reading configuration...");
-	readConfig();
-	debugPrintln("Setup patch manager...");
-	setupPatchManager();
-	debugPrintln("Setup display...");
-	setupDisplay(_config.displayDim);
+	debugPrintln("Setup...");
+	Wire.begin();	
+	setupStorage();	
+	readConfig();	
+	setupPatchManager();	
+	initUi(_config.displayDim);
 	_display.display(_config.version);
-	
-	debugPrintln("Setup user interface...");
-	setupIo();
-	debugPrintln("Setup loops...");
+		
+	setupIo();	
 	setupLoops();
 
-#ifdef _DEBUG
-	//_ui.debug();
-#endif
-
-	debugPrint("Loading patch ");
-	debugPrintln(_config.patchNumber);
 	applyPatch(_config.currentState);	
 	displayPatchNumber(_config.patchNumber);
 
-	debugPrintln("Setup MIDI...");
 	setupMidi();
 
 	debugPrintln("Setup done !");
@@ -572,14 +250,6 @@ void setup()
 	_mode = PLAYING;
 	digitalWrite(EDIT_LED_PIN, LOW);
 }
-
-#ifdef _DEBUG
-int freeRam () {
-  extern int __heap_start, *__brkval; 
-  int v; 
-  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
-}
-#endif
 
 void loop()
 {
@@ -651,8 +321,6 @@ void loop()
 		debugPrintln(freeRam());
 		debugPrint("in menu : ");
 		debugPrintln(_inMenu);
-		//debugPrint("portBValue : ")
-		//debugPrintln(_currentPortBValue);
 	}
 #endif
 }
