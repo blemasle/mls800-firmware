@@ -22,8 +22,6 @@ void setupUi(byte dim)
 	debugPrintln("Setup display...");
 
 	_display.init(5, dim);
-	//reset any pending interrupt
-	_display.read();
 }
 
 //device specific interrupts configuration
@@ -42,6 +40,9 @@ void setupInterrupts()
 
 	//re enable INT6
 	sbi(EIMSK, INT6);
+
+	//reset any pending interrupt on the external chip
+	_display.read();
 }
 
 //io configuration
@@ -53,8 +54,6 @@ void setupIo()
 	digitalWrite(UI_PIN, HIGH);
 
 	pinMode(EDIT_LED_PIN, OUTPUT);
-
-	setupInterrupts();
 }
 
 void setupLoops()
@@ -78,4 +77,15 @@ void setupMidi()
 	MIDI.begin(_config.rxChannel);
 	MIDI.setHandleControlChange(handleControlChange);
 	MIDI.setHandleProgramChange(handleProgramChange);
+}
+
+void setupDone()
+{
+	setupInterrupts();
+
+	debugPrintln("Setup done !");
+	displayPatchNumber(_config.patchNumber);	
+	_mode = PLAYING;
+
+	_setupDone = true;
 }

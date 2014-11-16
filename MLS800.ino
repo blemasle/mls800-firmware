@@ -15,6 +15,8 @@ Config _config;
 DeviceState _mode;
 byte _editingValue;
 
+bool _setupDone = false;
+
 byte _currentLoopStates;
 byte _currentInputStates;
 byte _currentEditBttnState;
@@ -22,6 +24,7 @@ byte _currentExitBttnState;
 
 byte _currentEditValue;
 
+long _startedMillis;
 long _previousMillis;
 long _previousEditLedMillis;
 long _previousDisplayMillis;
@@ -75,26 +78,21 @@ void setup()
 	}
 #endif
 
+	_startedMillis = millis();
 	debugPrintln("Setup...");
 	Wire.begin();	
 	setupStorage();	
-	readConfig();	
-	setupPatchManager();	
+	readConfig();		
 	setupUi(_config.displayDim);
 	_display.display(_config.version);
 		
 	setupIo();	
 	setupLoops();
 
+	setupPatchManager();
 	applyPatch(_config.currentState);	
-	displayPatchNumber(_config.patchNumber);
 
-	setupMidi();
-
-	debugPrintln("Setup done !");
-
-	_mode = PLAYING;
-	digitalWrite(EDIT_LED_PIN, LOW);
+	setupMidi();	
 }
 
 void loop()
@@ -151,11 +149,15 @@ void loop()
 			}
 		}
 	}
-
+	
 	//handle user ui
 	if(_blinkLoopStates) blinkLoopStates();
 	if(_blinkEditLed) blinkEditLed();
 	if(_blinkDisplay) blinkDisplay();
+
+	if (!_setupDone && millis() - _startedMillis > VERSION_DISPLAY_DELAY) {
+		setupDone();
+	}
 
 	readMIDI();
 

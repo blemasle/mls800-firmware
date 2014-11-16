@@ -46,6 +46,7 @@
 
 #define BLINK_DELAY_LOW 250
 #define BLINK_DELAY_HIGH 750
+#define VERSION_DISPLAY_DELAY 1500
 
 // user input buttons
 #define EDIT_BTTN 3
@@ -95,12 +96,16 @@ struct Config
 // global variables
 //------------------------------------------------------
 
+extern bool _setupDone;
+
 extern byte _currentLoopStates;
 extern byte _currentInputStates;
 extern byte _currentEditBttnState;
 extern byte _currentExitBttnState;
 
 extern byte _currentEditValue;
+
+extern long _startedMillis;
 extern long _previousMillis;
 extern long _previousEditLedMillis;
 extern long _previousDisplayMillis;
@@ -140,6 +145,7 @@ void setupInterrupts();
 void setupIo();
 void setupLoops();
 void setupMidi();
+void setupDone();
 
 void handleProgramChange(byte channel, byte number);
 void handleControlChange(byte channel, byte number, byte value);

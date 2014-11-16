@@ -239,5 +239,3 @@ MENU_ACTION factoryReset()
 {
 	return MENU_ACTION_NONE;
 }
-
-//==================== /MENU =======================//
