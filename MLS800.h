@@ -1,26 +1,38 @@
 #ifndef _MLS800_h
 #define _MLS800_h
 
+//------------------------------------------------------
+// Includes
+//------------------------------------------------------
+
 #include <Arduino.h>
 
+// libraries includes
 #include <Wire.h>
 #include <MCP23017.h>
 #include <AS1115.h>
 #include <E24LC256.h>
 #include <MIDI.h>
 
+// internal includes
 #include "MLS800_version.h"
 #include "PatchManager.h"
 #include "MLS800Menu.h"
 #include "Debug.h"
 
-#define CONFIG_ADDR 0
-#define CONFIG_SEED "AUDR"
+//------------------------------------------------------
+// Defines
+//------------------------------------------------------
 
+// external chips addresses
 #define UI_ADDR 0x20
 #define DISPLAY_ADDR 0x03
 #define STORAGE_ADDR 0x50
 #define LOOP_ADDR 0x24
+
+// config base address and seed to check integrity
+#define CONFIG_ADDR 0
+#define CONFIG_SEED "AUDR"
 
 #define UI_BTN_PORT 1
 #define UI_LEDS_PORT 0
@@ -52,9 +64,6 @@
 #ifndef sbi
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
-
-
-
 
 enum DeviceState
 {
