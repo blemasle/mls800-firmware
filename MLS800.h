@@ -78,6 +78,10 @@ struct Config
 	byte displayDim;
 };
 
+extern byte _currentLoopStates;
+extern byte _currentInputStates;
+extern byte _currentEditBttnState;
+extern byte _currentExitBttnState;
 
 extern byte _currentEditValue;
 extern long _previousMillis;
@@ -133,6 +137,7 @@ void swichState();
 void blinkEditLed();
 void blinkDisplay();
 void stopBlinkDisplay();
+void clearDisplay();
 void displayLoopStates(byte state);
 void blinkLoopStates();
 void stopBlinkLoopStates();
