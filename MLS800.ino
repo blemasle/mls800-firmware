@@ -157,7 +157,7 @@ void loop()
 	if(_blinkEditLed) blinkEditLed();
 	if(_blinkDisplay) blinkDisplay();
 
-//	MIDI.read();
+	readMIDI();
 
 #ifdef _DEBUG
 	if(millis() - debugLastMillis > 5000) 

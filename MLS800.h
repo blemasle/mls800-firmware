@@ -140,6 +140,7 @@ void setupMidi();
 
 void handleProgramChange(byte channel, byte number);
 void handleControlChange(byte channel, byte number, byte value);
+void readMIDI();
 
 void applyPatch(byte patch);
 byte loadPatch(byte patchNumber);
