@@ -143,5 +143,6 @@ void blinkLoopStates();
 void stopBlinkLoopStates();
 
 byte readInput();
+void applyLoopStates(byte state);
 
 #endif

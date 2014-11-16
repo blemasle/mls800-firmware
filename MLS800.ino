@@ -35,21 +35,6 @@ bool _inMenu;
 
 volatile bool input = false;
 
-
-//===================== LOOPS =======================//
-
-void applyLoopStates(byte state)
-{
-	_loops.write(state | ~state << 8);
-	delay(7);
-	//lay down the previous impulse
-	_loops.write(0x0000);
-	debugPrint("applied state : ");
-	debugPrintlnBase(state, BIN);
-}
-
-//==================== /LOOPS =======================//
-
 //===================== PATCHES ======================//
 
 void applyPatch(byte patch)

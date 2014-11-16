@@ -19,3 +19,13 @@ byte readInput()
 
 	return value;
 }
+
+void applyLoopStates(byte state)
+{
+	_loops.write(state | ~state << 8);
+	delay(7);
+	//lay down the previous impulse
+	_loops.write(0x0000);
+	debugPrint("applied state : ");
+	debugPrintlnBase(state, BIN);
+}
