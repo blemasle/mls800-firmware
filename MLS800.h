@@ -25,7 +25,6 @@
 //------------------------------------------------------
 
 // external chips addresses
-#define UI_ADDR 0x20
 #define DISPLAY_ADDR 0x03
 #define STORAGE_ADDR 0x50
 #define LOOP_ADDR 0x24
@@ -104,7 +103,6 @@ extern DeviceState _mode;
 
 extern volatile bool input;
 
-extern MCP23017 _ui;
 extern E24LC256 _storage;
 extern AS1115 _display;
 extern MCP23017 _loops;

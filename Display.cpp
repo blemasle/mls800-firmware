@@ -36,7 +36,6 @@ void clearDisplay() {
 void displayLoopStates(byte state)
 {
 	_display.display(5, state);
-	//_ui.writePort(UI_LEDS_PORT, state);
 }
 
 void blinkLoopStates()

@@ -49,24 +49,12 @@ void setupIo()
 {
 	debugPrintln("Setup user interface...");
 
-	_ui.init();
-
-	//port a : ouput
-	_ui.portMode(UI_LEDS_PORT, 0x00);
-
-	//port b : input
-	_ui.portMode(UI_BTN_PORT, 0xFF);
-
 	pinMode(UI_PIN, INPUT);
 	digitalWrite(UI_PIN, HIGH);
 
 	pinMode(EDIT_LED_PIN, OUTPUT);
 
 	setupInterrupts();
-
-#ifdef _DEBUG
-	//_ui.debug();
-#endif
 }
 
 void setupLoops()
