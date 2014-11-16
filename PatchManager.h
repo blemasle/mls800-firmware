@@ -1,7 +1,7 @@
 #ifndef _PatchManager_h
 #define _PatchManager_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include <E24LC256.h>
 
 #define PATCH_DEFAULT_VALUE 0
