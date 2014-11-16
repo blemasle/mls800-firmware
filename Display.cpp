@@ -58,3 +58,16 @@ void stopBlinkLoopStates()
 	displayLoopStates(_currentLoopStates);
 	_ledsShuttedOff = false;
 }
+
+void printNumber(char * s, byte nb)
+{
+	byte pos = nb > 99 ? 3 : nb > 9 ? 2 : 1;
+	itoa(nb, s + strlen(s) - pos, 10);
+}
+
+void displayPatchNumber(byte nb)
+{
+	char str[5] = "P   ";
+	printNumber(str, nb);
+	_display.display(str, false);
+}

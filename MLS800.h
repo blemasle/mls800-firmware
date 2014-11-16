@@ -142,4 +142,6 @@ void displayLoopStates(byte state);
 void blinkLoopStates();
 void stopBlinkLoopStates();
 
+byte readInput();
+
 #endif
