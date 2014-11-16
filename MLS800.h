@@ -54,6 +54,9 @@
 #define DOWN_BTTN 15
 #define UP_BTTN 16
 
+//midi
+#define HARD_MIDI_PORT USE_SERIAL_PORT
+
 //------------------------------------------------------
 // macros
 //------------------------------------------------------

@@ -12,7 +12,6 @@ void endSerial()
 {
 	Serial.flush();
 	Serial.end();
-	MIDI.begin(_config.rxChannel);
 }
 
 int freeRam() {

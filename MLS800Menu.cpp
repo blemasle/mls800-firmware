@@ -174,9 +174,9 @@ MENU_ACTION midiRBack()
 MENU_ACTION midiRSave()
 {
 	writeConfig();
-	//Serial.flush(); //needed ??
-	//Serial.end();
-	//MIDI.begin(_config.rxChannel);
+	HARD_MIDI_PORT.flush();
+	HARD_MIDI_PORT.end();
+	MIDI.begin(_config.rxChannel);
 	return MENU_ACTION_BACK;
 }
 
