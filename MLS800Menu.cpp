@@ -98,7 +98,7 @@ MenuItem memClr = {
 MenuItem memClrYes = {
 	"yes ",
 	&memClr,
-	0,
+	&memClrd,
 	&memClrNo,
 	&memClrNo,
 	&menuDisplay,
@@ -237,5 +237,32 @@ MENU_ACTION dimUp()
 
 MENU_ACTION factoryReset()
 {
-	return MENU_ACTION_NONE;
+	unsigned short addr = 0;
+	unsigned short i = 0;
+	byte dots;
+	
+	_display.clear();
+	do {
+		//addr += _storage.erasePage(addr);
+		delay(50);
+		addr += E24LC256_PAGESIZE;		
+		dots = (i++ / 2) % 8;
+
+		debugPrint("Page erased : ");
+		debugPrintlnBase(addr, HEX);
+		debugPrint("Dots : ");
+		debugPrintln(dots);
+		if (dots > 3) {
+			for (byte digit = 0; digit < dots - 3; digit++) {
+				_display.display(digit, BLANK);
+			}
+		}
+		else {
+			for (byte digit = 0; digit <= dots; digit++) {
+				_display.display(digit, DOT);
+			}
+		}
+	} while (addr < E24LC256_MAXADRESS);
+
+	return MENU_ACTION_SELECT;
 }

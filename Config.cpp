@@ -11,6 +11,7 @@ void writeConfig()
 
 void resetConfig()
 {
+	debugPrint("Resetting configuration... ");
 	Config config = {
 		CONFIG_SEED,
 		MLS800_VERSION,
@@ -23,6 +24,7 @@ void resetConfig()
 
 	_config = config;
 	writeConfig();
+	debugPrintln("Done !");
 }
 
 void readConfig()

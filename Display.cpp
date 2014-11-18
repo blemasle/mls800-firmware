@@ -35,7 +35,7 @@ void clearDisplay() {
 
 void displayLoopStates(byte state)
 {
-	_display.display(5, state);
+	_display.display(4, state);
 }
 
 void blinkLoopStates()
