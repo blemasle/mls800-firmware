@@ -32,6 +32,7 @@
 // config base address and seed to check integrity
 #define CONFIG_ADDR 0
 #define CONFIG_SEED "AUDR"
+#define CONFIG_CLEARED_TIMEOUT 1500
 
 // config storage configuration
 #define PATCHES_ADDR E24LC256_PAGESIZE

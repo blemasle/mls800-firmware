@@ -177,6 +177,7 @@ MENU_ACTION midiRSave()
 	HARD_MIDI_PORT.flush();
 	HARD_MIDI_PORT.end();
 	MIDI.begin(_config.rxChannel);
+
 	return MENU_ACTION_BACK;
 }
 
@@ -241,17 +242,12 @@ MENU_ACTION factoryReset()
 	unsigned short i = 0;
 	byte dots;
 	
+	debugPrint("Factory reset... ")
 	_display.clear();
 	do {
-		//addr += _storage.erasePage(addr);
-		delay(50);
-		addr += E24LC256_PAGESIZE;		
+		addr += _storage.erasePage(addr);
 		dots = (i++ / 2) % 8;
 
-		debugPrint("Page erased : ");
-		debugPrintlnBase(addr, HEX);
-		debugPrint("Dots : ");
-		debugPrintln(dots);
 		if (dots > 3) {
 			for (byte digit = 0; digit < dots - 3; digit++) {
 				_display.display(digit, BLANK);
@@ -262,7 +258,10 @@ MENU_ACTION factoryReset()
 				_display.display(digit, DOT);
 			}
 		}
-	} while (addr < E24LC256_MAXADRESS / 10);
+	} while (addr < E24LC256_MAXADRESS);
+	debugPrintln("Done !");
+
+	resetConfig();
 
 	return MENU_ACTION_SELECT;
 }
@@ -275,7 +274,9 @@ MENU_ACTION factoryResetCancel()
 MENU_ACTION factoryResetDoneDisplay(const char* text)
 {
 	menuDisplay(text);
-	delay(1500);
+	delay(CONFIG_CLEARED_TIMEOUT);
 
-	return MENU_ACTION_BACK;
+	asm volatile ("  jmp 0");
+
+	return MENU_ACTION_NONE;
 }
