@@ -115,7 +115,7 @@ MenuItem memClrNo = {
 	&memClrYes,
 	&memClrYes,
 	&menuDisplay,
-	0,
+	&factoryResetCancel,
 	0,
 	0,
 	0
@@ -127,7 +127,7 @@ MenuItem memClrd = {
 	0,
 	0,
 	0,
-	&menuDisplay,
+	&factoryResetDoneDisplay,
 	0,
 	0,
 	0,
@@ -262,7 +262,20 @@ MENU_ACTION factoryReset()
 				_display.display(digit, DOT);
 			}
 		}
-	} while (addr < E24LC256_MAXADRESS);
+	} while (addr < E24LC256_MAXADRESS / 10);
 
 	return MENU_ACTION_SELECT;
+}
+
+MENU_ACTION factoryResetCancel()
+{
+	return MENU_ACTION_BACK;
+}
+
+MENU_ACTION factoryResetDoneDisplay(const char* text)
+{
+	menuDisplay(text);
+	delay(1500);
+
+	return MENU_ACTION_BACK;
 }

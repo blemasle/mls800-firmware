@@ -35,5 +35,7 @@ MENU_ACTION dimDown();
 MENU_ACTION dimUp();
 
 MENU_ACTION factoryReset();
+MENU_ACTION factoryResetCancel();
+MENU_ACTION factoryResetDoneDisplay(const char* text);
 
 #endif
