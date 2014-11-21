@@ -41,8 +41,6 @@
 
 // user interface system definitions
 #define UI_PIN 8
-#define UI_INT PCINT4
-#define UI_INT_PIN PINB4
 #define EDIT_LED_PIN 13
 
 #define BLINK_DELAY_LOW 250
@@ -100,10 +98,6 @@ struct Config
 extern bool _setupDone;
 
 extern byte _currentLoopStates;
-extern byte _currentInputStates;
-extern byte _currentEditBttnState;
-extern byte _currentExitBttnState;
-
 extern byte _currentEditValue;
 
 extern long _startedMillis;
@@ -120,7 +114,7 @@ extern bool _inMenu;
 extern Config _config;
 extern DeviceState _mode;
 
-extern volatile bool input;
+extern volatile bool _inputInterrupted;
 
 extern E24LC256 _storage;
 extern AS1115 _display;

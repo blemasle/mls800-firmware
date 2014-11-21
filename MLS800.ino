@@ -13,15 +13,10 @@ PatchManager _patchMngr = PatchManager(&_storage);
 Config _config;
 
 DeviceState _mode;
-byte _editingValue;
 
 bool _setupDone = false;
 
 byte _currentLoopStates;
-byte _currentInputStates;
-byte _currentEditBttnState;
-byte _currentExitBttnState;
-
 byte _currentEditValue;
 
 long _startedMillis;
@@ -98,7 +93,7 @@ void setup()
 void loop()
 {
 	byte bttn;
-	if (input && (bttn = readInput()) != LOW)
+	if (_inputInterrupted && (bttn = readInput()) != LOW)
 	{
 		debugPrint("Interrupted by :");
 		debugPrintln(bttn);

@@ -3,7 +3,7 @@
 //read user input and map from the power of two to button number
 byte readInput()
 {
-	input = false;
+	_inputInterrupted = false;
 	//active input is LOW, inverting the bytes
 	unsigned short current = ~_display.read();
 
