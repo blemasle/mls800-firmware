@@ -11,22 +11,22 @@
 class PatchManager {
 private:
 	E24LC256* _storage;
-	byte _startAddr;
-	byte _patchesLength;
-	byte _ccLength;
+	uint8_t _startAddr;
+	uint8_t _patchesLength;
+	uint8_t _ccLength;
 
-	bool validatePatchNumber(byte patchNumber, byte ccNumber);
-	unsigned short getPatchAddress(byte patchNumber, byte ccNumber);
+	bool validatePatchNumber(uint8_t patchNumber, uint8_t ccNumber);
+	uint16_t getPatchAddress(uint8_t patchNumber, uint8_t ccNumber);
 public:
 	PatchManager(E24LC256* storage);
 	~PatchManager();
-	void init(int startAddr, byte patchesLength, byte ccLength);
+	void init(int startAddr, uint8_t patchesLength, uint8_t ccLength);
 	
-	bool load(byte patchNumber, byte& value);
-	bool load(byte patchNumber, byte ccNumber, byte& value);
+	bool load(uint8_t patchNumber, uint8_t& value);
+	bool load(uint8_t patchNumber, uint8_t ccNumber, uint8_t& value);
 	
-	bool save(byte patchNumber, byte value);
-	bool save(byte patchNumber, byte ccNumber, byte value);
+	bool save(uint8_t patchNumber, uint8_t value);
+	bool save(uint8_t patchNumber, uint8_t ccNumber, uint8_t value);
 };
 
 #endif

@@ -238,9 +238,9 @@ MENU_ACTION dimUp()
 
 MENU_ACTION factoryReset()
 {
-	unsigned short addr = 0;
-	unsigned short i = 0;
-	byte dots;
+	uint16_t addr = 0;
+	uint16_t i = 0;
+	uint8_t dots;
 	
 	debugPrint("Factory reset... ")
 	_display.clear();
@@ -249,12 +249,12 @@ MENU_ACTION factoryReset()
 		dots = (i++ / 2) % 8;
 
 		if (dots > 3) {
-			for (byte digit = 0; digit < dots - 3; digit++) {
+			for (uint8_t digit = 0; digit < dots - 3; digit++) {
 				_display.display(digit, BLANK);
 			}
 		}
 		else {
-			for (byte digit = 0; digit <= dots; digit++) {
+			for (uint8_t digit = 0; digit <= dots; digit++) {
 				_display.display(digit, DOT);
 			}
 		}

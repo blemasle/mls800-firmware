@@ -86,9 +86,9 @@ struct Config
 	char version[7];
 	int8_t rxChannel;
 	int8_t txChannel;
-	byte patchNumber;
-	byte currentState;
-	byte displayDim;
+	uint8_t patchNumber;
+	uint8_t currentState;
+	uint8_t displayDim;
 };
 
 //------------------------------------------------------
@@ -97,8 +97,8 @@ struct Config
 
 extern bool _setupDone;
 
-extern byte _currentLoopStates;
-extern byte _currentEditValue;
+extern uint8_t _currentLoopStates;
+extern uint8_t _currentEditValue;
 
 extern long _startedMillis;
 extern long _previousMillis;
@@ -130,24 +130,24 @@ void writeConfig();
 void resetConfig();
 void readConfig();
 
-void displayPatchNumber(byte nb);
-void printNumber(char * s, byte nb);
+void displayPatchNumber(uint8_t nb);
+void printNumber(char * s, uint8_t nb);
 
 void setupStorage();
 void setupPatchManager();
-void setupUi(byte dim);
+void setupUi(uint8_t dim);
 void setupInterrupts();
 void setupIo();
 void setupLoops();
 void setupMidi();
 void setupDone();
 
-void handleProgramChange(byte channel, byte number);
-void handleControlChange(byte channel, byte number, byte value);
+void handleProgramChange(uint8_t channel, uint8_t number);
+void handleControlChange(uint8_t channel, uint8_t number, uint8_t value);
 void readMIDI();
 
-void applyPatch(byte patch);
-byte loadPatch(byte patchNumber);
+void applyPatch(uint8_t patch);
+uint8_t loadPatch(uint8_t patchNumber);
 
 void startLearning();
 void endLearning();
@@ -161,11 +161,11 @@ void blinkEditLed();
 void blinkDisplay();
 void stopBlinkDisplay();
 void clearDisplay();
-void displayLoopStates(byte state);
+void displayLoopStates(uint8_t state);
 void blinkLoopStates();
 void stopBlinkLoopStates();
 
-byte readInput();
-void applyLoopStates(byte state);
+uint8_t readInput();
+void applyLoopStates(uint8_t state);
 
 #endif

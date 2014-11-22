@@ -16,8 +16,8 @@ DeviceState _mode;
 
 bool _setupDone = false;
 
-byte _currentLoopStates;
-byte _currentEditValue;
+uint8_t _currentLoopStates;
+uint8_t _currentEditValue;
 
 long _startedMillis;
 long _previousMillis;
@@ -34,7 +34,7 @@ volatile bool input = false;
 
 //===================== PATCHES ======================//
 
-void applyPatch(byte patch)
+void applyPatch(uint8_t patch)
 {
 	debugPrint("Loading patch ");
 	debugPrintln(_config.patchNumber);
@@ -42,9 +42,9 @@ void applyPatch(byte patch)
 	applyLoopStates(patch);
 }
 
-byte loadPatch(byte patchNumber)
+uint8_t loadPatch(uint8_t patchNumber)
 {
-	byte patch;
+	uint8_t patch;
 	_patchMngr.load(patchNumber, patch);
 	_config.patchNumber = patchNumber;
 	_config.currentState = patch;
@@ -92,7 +92,7 @@ void setup()
 
 void loop()
 {
-	byte bttn;
+	uint8_t bttn;
 	if (_inputInterrupted && (bttn = readInput()) != LOW)
 	{
 		debugPrint("Interrupted by :");

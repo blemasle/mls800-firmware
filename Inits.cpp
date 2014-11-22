@@ -17,7 +17,7 @@ void setupPatchManager()
 
 
 //display configuration
-void setupUi(byte dim)
+void setupUi(uint8_t dim)
 {
 	debugPrintln("Setup display...");
 

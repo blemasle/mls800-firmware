@@ -1,6 +1,6 @@
 #include "MLS800.h"
 
-void handleProgramChange(byte channel, byte number)
+void handleProgramChange(uint8_t channel, uint8_t number)
 {
 	debugPrint("Program Change : ");
 	debugPrintln(number);
@@ -16,7 +16,7 @@ void handleProgramChange(byte channel, byte number)
 	}
 }
 
-void handleControlChange(byte channel, byte number, byte value)
+void handleControlChange(uint8_t channel, uint8_t number, uint8_t value)
 {
 	debugPrint("Control Change : ");
 	debugPrint(number);

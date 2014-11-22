@@ -33,7 +33,7 @@ void clearDisplay() {
 	displayLoopStates(_config.currentState);
 }
 
-void displayLoopStates(byte state)
+void displayLoopStates(uint8_t state)
 {
 	_display.display(4, state);
 }
@@ -58,13 +58,13 @@ void stopBlinkLoopStates()
 	_ledsShuttedOff = false;
 }
 
-void printNumber(char * s, byte nb)
+void printNumber(char * s, uint8_t nb)
 {
-	byte pos = nb > 99 ? 3 : nb > 9 ? 2 : 1;
+	uint8_t pos = nb > 99 ? 3 : nb > 9 ? 2 : 1;
 	itoa(nb, s + strlen(s) - pos, 10);
 }
 
-void displayPatchNumber(byte nb)
+void displayPatchNumber(uint8_t nb)
 {
 	char str[5] = "P   ";
 	printNumber(str, nb);
