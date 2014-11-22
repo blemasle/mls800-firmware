@@ -30,7 +30,7 @@ bool _blinkEditLed;
 bool _blinkDisplay;
 bool _inMenu;
 
-volatile bool input = false;
+volatile bool _inputInterrupted = false;
 
 //===================== PATCHES ======================//
 

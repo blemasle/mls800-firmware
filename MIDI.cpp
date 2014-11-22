@@ -27,7 +27,7 @@ void handleControlChange(uint8_t channel, uint8_t number, uint8_t value)
 void readMIDI()
 {
 	//reads MIDI commands from serial port
-	//MIDI.read();
+	MIDI.read();
 
 	//reads MIDI commands from USB
 	while (MIDIUSB.available() > 0) {		
