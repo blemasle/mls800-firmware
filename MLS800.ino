@@ -155,15 +155,7 @@ void loop()
 	}
 
 	readMIDI();
-
 #ifdef _DEBUG
-	if(millis() - debugLastMillis > 5000) 
-	{
-		debugLastMillis = millis();
-		debugPrint("free ram : ");
-		debugPrintln(freeRam());
-		debugPrint("in menu : ");
-		debugPrintln(_inMenu);
-	}
+	debug();
 #endif
 }

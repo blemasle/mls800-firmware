@@ -5,10 +5,13 @@
 
 #ifdef _DEBUG
 
+extern long debugLastMillis;
+
 int freeRam();
 void startSerial();
 void endSerial();
-extern long debugLastMillis;
+void debug();
+
 #define debugPrintln(msg) startSerial();Serial.println(msg);endSerial();
 #define debugPrint(msg) startSerial();Serial.print(msg);endSerial();
 #define debugPrintlnBase(msg, base) startSerial();Serial.println(msg, base);endSerial();
