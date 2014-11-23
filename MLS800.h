@@ -131,7 +131,7 @@ void resetConfig();
 void readConfig();
 
 void displayPatchNumber(uint8_t nb);
-void printNumber(char * s, uint8_t nb);
+void printNumber(char* s, uint8_t nb);
 
 void setupStorage();
 void setupPatchManager();

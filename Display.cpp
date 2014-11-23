@@ -58,7 +58,7 @@ void stopBlinkLoopStates()
 	_ledsShuttedOff = false;
 }
 
-void printNumber(char * s, uint8_t nb)
+void printNumber(char* s, uint8_t nb)
 {
 	uint8_t pos = nb > 99 ? 3 : nb > 9 ? 2 : 1;
 	itoa(nb, s + strlen(s) - pos, 10);
