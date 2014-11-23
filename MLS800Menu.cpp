@@ -85,7 +85,7 @@ MenuItem dim_Edit = {
 MenuItem memClr = {
 	"clr ",
 	&root,
-	&memClrYes,
+	&memClrNo,
 	&dim,
 	&midi,
 	&menuDisplay,
