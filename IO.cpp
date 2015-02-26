@@ -22,10 +22,22 @@ uint8_t readInput()
 
 void applyLoopStates(uint8_t state)
 {
-	_loops.write(state | ~state << 8);
+
+	_loops.write(transformState(state) | (transformState(state >> 4) << 8));
 	delay(7);
 	//lay down the previous impulse
 	_loops.write(0x0000);
 	debugPrint("applied state : ");
 	debugPrintlnBase(state, BIN);
+}
+
+uint8_t transformState(uint8_t state)
+{
+	uint8_t result = 0;
+	for (uint8_t i = 0; i < 4; i++) {
+		if ((state & (1 << i)) != 0) result += 1 << (2 * i + 1);
+		else result += 1 << (2 * i);
+	}
+
+	return result;
 }
