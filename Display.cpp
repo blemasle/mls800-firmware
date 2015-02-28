@@ -68,5 +68,5 @@ void displayPatchNumber(uint8_t nb)
 {
 	char str[5] = "P   ";
 	printNumber(str, nb);
-	_display.display(str, false);
+	_display.display(str, (bool)false);
 }
