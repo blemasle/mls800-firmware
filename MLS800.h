@@ -167,5 +167,6 @@ void stopBlinkLoopStates();
 
 uint8_t readInput();
 void applyLoopStates(uint8_t state);
+uint8_t transformState(uint8_t state);
 
 #endif
