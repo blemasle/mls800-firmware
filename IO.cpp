@@ -23,7 +23,7 @@ uint8_t readInput()
 void applyLoopStates(uint8_t state)
 {
 
-	_loops.write(transformState(state) | (transformState(state >> 4) << 8));
+	_loops.write(state | ~reverseByte(state) << 8);
 	delay(7);
 	//lay down the previous impulse
 	_loops.write(0x0000);
@@ -31,13 +31,16 @@ void applyLoopStates(uint8_t state)
 	debugPrintlnBase(state, BIN);
 }
 
-uint8_t transformState(uint8_t state)
+//see http://graphics.stanford.edu/~seander/bithacks.html#BitReverseObvious
+uint8_t reverseByte(uint8_t v)
 {
-	uint8_t result = 0;
-	for (uint8_t i = 0; i < 4; i++) {
-		if ((state & (1 << i)) != 0) result += 1 << (2 * i + 1);
-		else result += 1 << (2 * i);
-	}
+	uint8_t r = v; // r will be reversed bits of v; first get LSB of v
+	int s = sizeof(uint8_t) * 8 - 1; // extra shift needed at end
 
-	return result;
+	for (v >>= 1; v; v >>= 1) {
+		r <<= 1;
+		r |= v & 1;
+		s--;
+	}
+	return r <<= s; // shift when v's highest bits are zero
 }
