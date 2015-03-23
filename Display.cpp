@@ -35,6 +35,16 @@ void clearDisplay() {
 
 void displayLoopStates(uint8_t state)
 {
+#ifdef REV_A	
+	/* pcb rev A has some errors that we need to compensate :
+	*  bttn DP is last instead of first : change the state to display so it is transparent for outer code
+	*  DP which is the MSB in the keyscan register become the LSB for the program
+	*  DP A B C D E F G is displayed as A B C D E F G DP
+	*/
+	bool last = state & 0x01;
+	state >>= 1;
+	if (last) state |= 0x80;
+#endif
 	_display.display(4, state);
 }
 

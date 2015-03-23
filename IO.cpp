@@ -17,6 +17,16 @@ uint8_t readInput()
 		value++;
 	}
 
+#ifdef REV_A
+	/* pcb rev A has some errors that we need to compensate :
+	*  bttn DP is last instead of first : change the value so it is transparent for outer code
+	*  DP which is the MSB in the keyscan register become the LSB for the program
+	*  DP A B C D E F G is understood as A B C D E F G DP
+	*/
+	if(value > 8 && value < 16) value += 1;
+	else if (value == 16) value = 9;
+#endif
+
 	return value;
 }
 

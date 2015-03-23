@@ -31,7 +31,7 @@
 
 // config base address and seed to check integrity
 #define CONFIG_ADDR 0
-#define CONFIG_SEED "AUDR"
+#define CONFIG_SEED "AUDE"
 #define CONFIG_CLEARED_TIMEOUT 1500
 
 // config storage configuration
