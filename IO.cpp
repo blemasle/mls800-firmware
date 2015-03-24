@@ -33,7 +33,7 @@ uint8_t readInput()
 void applyLoopStates(uint8_t state)
 {
 
-	_loops.write(state | ~reverseByte(state) << 8);
+	_loops.write(reverseByte(state) | ~state << 8);
 	delay(7);
 	//lay down the previous impulse
 	_loops.write(0x0000);
