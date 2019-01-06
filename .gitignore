@@ -1,7 +1,5 @@
-**/Debug
-**/Visual[!!-~]Micro
-**/*.sdf
-**/*.opensdf
-**/*.suo
-**/.vmprogram
-**/ipch
+# Build results
+[Bb]in/
+
+#Visual Studio code
+.vscode/
