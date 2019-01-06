@@ -1,6 +1,6 @@
 #include "PatchManager.h"
 
-PatchManager::PatchManager(E24LC256* storage)
+PatchManager::PatchManager(E24* storage)
 {
 	_storage = storage;
 }

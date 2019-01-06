@@ -258,7 +258,7 @@ MENU_ACTION factoryReset()
 				_display.display(digit, DOT);
 			}
 		}
-	} while (addr < E24LC256_MAXADRESS);
+	} while (addr < STORAGE_MAX_ADDR);
 	debugPrintln("Done !");
 
 	resetConfig();

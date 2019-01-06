@@ -11,8 +11,8 @@
 #include <Wire.h>
 #include <MCP23017.h>
 #include <AS1115.h>
-#include <E24LC256.h>
-#include <MIDI.h>
+#include <E24.h>
+#include <MIDIUSB.h>
 
 // internal includes
 #include "MLS800_version.h"
@@ -35,7 +35,9 @@
 #define CONFIG_CLEARED_TIMEOUT 1500
 
 // config storage configuration
-#define PATCHES_ADDR E24LC256_PAGESIZE
+#define STORAGE_SIZE E24Size_t::E24_256K
+#define STORAGE_MAX_ADDR E24_MAX_ADDRESS(STORAGE_SIZE)
+#define PATCHES_ADDR E24_PAGE_SIZE(STORAGE_SIZE)
 #define PATCH_COUNT 128
 #define CC_COUNT 128
 
@@ -116,7 +118,7 @@ extern DeviceState _mode;
 
 extern volatile bool _inputInterrupted;
 
-extern E24LC256 _storage;
+extern E24 _storage;
 extern AS1115 _display;
 extern MCP23017 _loops;
 extern PatchManager _patchMngr;

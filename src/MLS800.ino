@@ -2,10 +2,10 @@
 #include <Wire.h>
 #include <MCP23017.h>
 #include <AS1115.h>
-#include <E24LC256.h>
-#include <MIDI.h>
+#include <E24.h>
+#include <MIDIUSB.h>
 
-E24LC256 _storage = E24LC256(STORAGE_ADDR);
+E24 _storage = E24(STORAGE_SIZE, STORAGE_ADDR);
 AS1115 _display = AS1115(DISPLAY_ADDR);
 MCP23017 _loops = MCP23017(LOOP_ADDR);
 
