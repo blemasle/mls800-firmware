@@ -30,10 +30,10 @@ void readMIDI()
 	MIDI.read();
 
 	//reads MIDI commands from USB
-	while (MIDIUSB.available() > 0) {		
+	while (MIDIUSB.available() > 0) {
 		MIDIEvent e;
 		e = MIDIUSB.read();
-		
+
 		debugPrint("received MIDI from USB : ");
 		debugPrintlnBase(e.type, HEX);
 

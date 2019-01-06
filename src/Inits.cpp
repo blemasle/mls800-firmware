@@ -84,7 +84,7 @@ void setupDone()
 	setupInterrupts();
 
 	debugPrintln("Setup done !");
-	displayPatchNumber(_config.patchNumber);	
+	displayPatchNumber(_config.patchNumber);
 	_mode = PLAYING;
 
 	_setupDone = true;
