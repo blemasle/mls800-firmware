@@ -62,10 +62,9 @@ void setupLoops()
 
 	_loops.init();
 	//all ports to output
-	//port A : ON port
-	_loops.portMode(0, 0x00);
-	//port B : OFF port
-	_loops.portMode(1, 0x00);
+
+	_loops.portMode(MCP23017_PORT::A, 0x00); //port A : ON port
+	_loops.portMode(MCP23017_PORT::B, 0x00); //port B : OFF port
 }
 
 void setupMidi()
