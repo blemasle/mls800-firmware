@@ -87,7 +87,7 @@ void setup()
 	setupPatchManager();
 	applyPatch(_config.currentState);	
 
-	setupMidi();	
+	setupMidi();
 }
 
 void loop()
