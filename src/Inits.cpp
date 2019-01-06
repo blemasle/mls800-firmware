@@ -76,6 +76,10 @@ void setupMidi()
 	MIDI.begin(_config.rxChannel);
 	MIDI.setHandleControlChange(handleControlChange);
 	MIDI.setHandleProgramChange(handleProgramChange);
+
+	MIDIUSB.begin(_config.rxChannel);
+	MIDIUSB.setHandleControlChange(handleControlChange);
+	MIDIUSB.setHandleProgramChange(handleProgramChange);
 }
 
 void setupDone()

@@ -12,7 +12,8 @@
 #include <MCP23017.h>
 #include <AS1115.h>
 #include <E24.h>
-#include <MIDIUSB.h>
+#include <MIDI.h>
+#include <midi_UsbTransport.h>
 
 // internal includes
 #include "MLS800_version.h"
@@ -123,6 +124,13 @@ extern AS1115 _display;
 extern MCP23017 _loops;
 extern PatchManager _patchMngr;
 
+
+MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);
+
+static const unsigned sUsbTransportBufferSize = 16;
+typedef midi::UsbTransport<sUsbTransportBufferSize> UsbTransport;
+UsbTransport sUsbTransport;
+MIDI_CREATE_INSTANCE(UsbTransport, sUsbTransport, MIDIUSB);
 
 //------------------------------------------------------
 // prototypes

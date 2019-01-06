@@ -7,7 +7,7 @@
 extern Menu menu;
 extern MenuItem root;
 
-extern MenuItem midi;
+extern MenuItem midiRoot;
 extern MenuItem midiR;
 extern MenuItem midiR_Edit;
 

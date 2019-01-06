@@ -30,18 +30,5 @@ void readMIDI()
 	MIDI.read();
 
 	//reads MIDI commands from USB
-	while (MIDIUSB.available() > 0) {
-		MIDIEvent e;
-		e = MIDIUSB.read();
-
-		debugPrint("received MIDI from USB : ");
-		debugPrintlnBase(e.type, HEX);
-
-		if (e.type == 0xB) {
-			handleControlChange(_config.rxChannel, e.m2, e.m3);
-		}
-		else if (e.type == 0xC) {
-			handleProgramChange(_config.rxChannel, e.m2);
-		}
-	}
+	MIDIUSB.read();
 }

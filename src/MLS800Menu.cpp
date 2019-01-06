@@ -7,9 +7,9 @@
 MenuItem root = {
 	"menu",
 	0,
-	&midi,
+	&midiRoot,
 	&memClr,
-	&midi,
+	&midiRoot,
 	&menuDisplay,
 	0,
 	&menuExit,
@@ -17,7 +17,7 @@ MenuItem root = {
 	0
 };
 
-MenuItem midi = {
+MenuItem midiRoot = {
 	"midi",
 	&root,
 	&midiR,
@@ -32,7 +32,7 @@ MenuItem midi = {
 
 MenuItem midiR = {
 	"r   ",
-	&midi,
+	&midiRoot,
 	&midiR_Edit,
 	&midiR,
 	&midiR,
@@ -60,7 +60,7 @@ MenuItem dim = {
 	"dim ",
 	&root,
 	&dim_Edit,
-	&midi,
+	&midiRoot,
 	&memClr,
 	&menuDisplay,
 	0,
@@ -87,7 +87,7 @@ MenuItem memClr = {
 	&root,
 	&memClrNo,
 	&dim,
-	&midi,
+	&midiRoot,
 	&menuDisplay,
 	0,
 	0,
@@ -174,9 +174,8 @@ MENU_ACTION midiRBack()
 MENU_ACTION midiRSave()
 {
 	writeConfig();
-	HARD_MIDI_PORT.flush();
-	HARD_MIDI_PORT.end();
-	MIDI.begin(_config.rxChannel);
+	MIDI.setInputChannel(_config.rxChannel);
+	MIDIUSB.setInputChannel(_config.rxChannel);
 
 	return MENU_ACTION_BACK;
 }

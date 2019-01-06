@@ -3,7 +3,7 @@
 #include <MCP23017.h>
 #include <AS1115.h>
 #include <E24.h>
-#include <MIDIUSB.h>
+#include <MIDI.h>
 
 E24 _storage = E24(STORAGE_SIZE, STORAGE_ADDR);
 AS1115 _display = AS1115(DISPLAY_ADDR);
