@@ -175,7 +175,7 @@ MENU_ACTION midiRSave()
 {
 	writeConfig();
 	MIDI.setInputChannel(_config.rxChannel);
-	MIDIUSB.setInputChannel(_config.rxChannel);
+	UsbMIDI.setInputChannel(_config.rxChannel);
 
 	return MENU_ACTION_BACK;
 }

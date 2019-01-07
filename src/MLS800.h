@@ -56,9 +56,6 @@
 #define DOWN_BTTN 15
 #define UP_BTTN 16
 
-//midi
-#define HARD_MIDI_PORT USE_SERIAL_PORT
-
 //------------------------------------------------------
 // macros
 //------------------------------------------------------
@@ -123,13 +120,11 @@ extern AS1115 _display;
 extern MCP23017 _loops;
 extern PatchManager _patchMngr;
 
-
-MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);
-
 static const unsigned sUsbTransportBufferSize = 16;
 typedef midi::UsbTransport<sUsbTransportBufferSize> UsbTransport;
-UsbTransport sUsbTransport;
-MIDI_CREATE_INSTANCE(UsbTransport, sUsbTransport, MIDIUSB);
+
+extern midi::MidiInterface<HardwareSerial> MIDI;
+extern midi::MidiInterface<UsbTransport> UsbMIDI;
 
 //------------------------------------------------------
 // prototypes
