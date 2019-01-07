@@ -1,3 +1,3 @@
 #pragma once
 
-#define MLS800_VERSION "1.1"
+#define MLS800_VERSION "2.0"
