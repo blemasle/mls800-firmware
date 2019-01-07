@@ -249,12 +249,12 @@ MENU_ACTION factoryReset()
 
 		if (dots > 3) {
 			for (uint8_t digit = 0; digit < dots - 3; digit++) {
-				_display.display(digit, BLANK);
+				_display.display(digit, AS1115_BLANK);
 			}
 		}
 		else {
 			for (uint8_t digit = 0; digit <= dots; digit++) {
-				_display.display(digit, DOT);
+				_display.display(digit, AS1115_DOT);
 			}
 		}
 	} while (addr < STORAGE_MAX_ADDR);
