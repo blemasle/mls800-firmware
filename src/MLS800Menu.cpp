@@ -244,7 +244,7 @@ MENU_ACTION factoryReset()
 	debugPrint("Factory reset... ")
 	_display.clear();
 	do {
-		addr += _storage.erasePage(addr);
+		addr += _storage.fillPage(addr, 0);
 		dots = (i++ / 2) % 8;
 
 		if (dots > 3) {
