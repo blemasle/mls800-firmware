@@ -1,5 +1,4 @@
-#ifndef _MLS800_Menu_h
-#define _MLS800_Menu_h
+#pragma once
 
 #include "MLS800.h"
 #include "Menu.h"
@@ -37,5 +36,3 @@ MENU_ACTION dimUp();
 MENU_ACTION factoryReset();
 MENU_ACTION factoryResetCancel();
 MENU_ACTION factoryResetDoneDisplay(const char* text);
-
-#endif

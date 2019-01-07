@@ -1,5 +1,4 @@
-#ifndef _PatchManager_h
-#define _PatchManager_h
+#pragma once
 
 #include <Arduino.h>
 #include <E24.h>
@@ -28,5 +27,3 @@ public:
 	bool save(uint8_t patchNumber, uint8_t value);
 	bool save(uint8_t patchNumber, uint8_t ccNumber, uint8_t value);
 };
-
-#endif

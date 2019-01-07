@@ -1,5 +1,4 @@
-#ifndef _MLS800_h
-#define _MLS800_h
+#pragma once
 
 //------------------------------------------------------
 // includes
@@ -178,5 +177,3 @@ void stopBlinkLoopStates();
 uint8_t readInput();
 void applyLoopStates(uint8_t state);
 uint8_t reverseByte(uint8_t v);
-
-#endif

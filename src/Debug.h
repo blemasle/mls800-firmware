@@ -1,5 +1,4 @@
-#ifndef _Debug_h
-#define _Debug_h
+#pragma once
 
 #include <Arduino.h>
 
@@ -23,7 +22,5 @@ void debug();
 #define debugPrint(msg)
 #define debugPrintlnBase(msg, base)
 #define debugPrintBase(msg, base)
-
-#endif
 
 #endif
