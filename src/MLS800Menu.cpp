@@ -7,9 +7,9 @@
 MenuItem root = {
 	"menu",
 	0,
-	&midi,
+	&midiRoot,
 	&memClr,
-	&midi,
+	&midiRoot,
 	&menuDisplay,
 	0,
 	&menuExit,
@@ -17,7 +17,7 @@ MenuItem root = {
 	0
 };
 
-MenuItem midi = {
+MenuItem midiRoot = {
 	"midi",
 	&root,
 	&midiR,
@@ -32,7 +32,7 @@ MenuItem midi = {
 
 MenuItem midiR = {
 	"r   ",
-	&midi,
+	&midiRoot,
 	&midiR_Edit,
 	&midiR,
 	&midiR,
@@ -60,7 +60,7 @@ MenuItem dim = {
 	"dim ",
 	&root,
 	&dim_Edit,
-	&midi,
+	&midiRoot,
 	&memClr,
 	&menuDisplay,
 	0,
@@ -87,7 +87,7 @@ MenuItem memClr = {
 	&root,
 	&memClrNo,
 	&dim,
-	&midi,
+	&midiRoot,
 	&menuDisplay,
 	0,
 	0,
@@ -174,9 +174,8 @@ MENU_ACTION midiRBack()
 MENU_ACTION midiRSave()
 {
 	writeConfig();
-	HARD_MIDI_PORT.flush();
-	HARD_MIDI_PORT.end();
-	MIDI.begin(_config.rxChannel);
+	MIDI.setInputChannel(_config.rxChannel);
+	UsbMIDI.setInputChannel(_config.rxChannel);
 
 	return MENU_ACTION_BACK;
 }
@@ -238,29 +237,29 @@ MENU_ACTION dimUp()
 
 MENU_ACTION factoryReset()
 {
-	uint16_t addr = 0;
-	uint16_t i = 0;
+	uint16_t pageSize = E24_PAGE_SIZE(STORAGE_SIZE);
+	uint8_t pageCount = STORAGE_MAX_ADDR / pageSize;
 	uint8_t dots;
-	
+
 	debugPrint("Factory reset... ")
 	_display.clear();
-	do {
-		addr += _storage.erasePage(addr);
+	for(uint16_t i = 0; i < pageCount; i++) {
+		_storage.fill(i * pageSize, 0, pageSize);
 		dots = (i++ / 2) % 8;
 
 		if (dots > 3) {
 			for (uint8_t digit = 0; digit < dots - 3; digit++) {
-				_display.display(digit, BLANK);
+				_display.display(digit, AS1115_BLANK);
 			}
 		}
 		else {
 			for (uint8_t digit = 0; digit <= dots; digit++) {
-				_display.display(digit, DOT);
+				_display.display(digit, AS1115_DOT);
 			}
 		}
-	} while (addr < E24LC256_MAXADRESS);
-	debugPrintln("Done !");
+	}
 
+	debugPrintln("Done !");
 	resetConfig();
 
 	return MENU_ACTION_SELECT;

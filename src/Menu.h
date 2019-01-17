@@ -1,5 +1,4 @@
-#ifndef _Menu_h
-#define _Menu_h
+#pragma once
 
 enum MENU_ACTION {
 	MENU_ACTION_NONE,
@@ -31,5 +30,3 @@ public:
 	Menu(MenuItem* root);
 	void MenuAction(MENU_ACTION action);
 };
-
-#endif

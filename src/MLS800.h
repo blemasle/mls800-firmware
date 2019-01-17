@@ -1,5 +1,4 @@
-#ifndef _MLS800_h
-#define _MLS800_h
+#pragma once
 
 //------------------------------------------------------
 // includes
@@ -11,8 +10,9 @@
 #include <Wire.h>
 #include <MCP23017.h>
 #include <AS1115.h>
-#include <E24LC256.h>
+#include <E24.h>
 #include <MIDI.h>
+#include <midi_UsbTransport.h>
 
 // internal includes
 #include "MLS800_version.h"
@@ -35,7 +35,9 @@
 #define CONFIG_CLEARED_TIMEOUT 1500
 
 // config storage configuration
-#define PATCHES_ADDR E24LC256_PAGESIZE
+#define STORAGE_SIZE E24Size_t::E24_256K
+#define STORAGE_MAX_ADDR E24_MAX_ADDRESS(STORAGE_SIZE)
+#define PATCHES_ADDR E24_PAGE_SIZE(STORAGE_SIZE)
 #define PATCH_COUNT 128
 #define CC_COUNT 128
 
@@ -53,9 +55,6 @@
 
 #define DOWN_BTTN 15
 #define UP_BTTN 16
-
-//midi
-#define HARD_MIDI_PORT USE_SERIAL_PORT
 
 //------------------------------------------------------
 // macros
@@ -116,11 +115,16 @@ extern DeviceState _mode;
 
 extern volatile bool _inputInterrupted;
 
-extern E24LC256 _storage;
+extern E24 _storage;
 extern AS1115 _display;
 extern MCP23017 _loops;
 extern PatchManager _patchMngr;
 
+static const unsigned sUsbTransportBufferSize = 16;
+typedef midi::UsbTransport<sUsbTransportBufferSize> UsbTransport;
+
+extern midi::MidiInterface<HardwareSerial> MIDI;
+extern midi::MidiInterface<UsbTransport> UsbMIDI;
 
 //------------------------------------------------------
 // prototypes
@@ -168,5 +172,3 @@ void stopBlinkLoopStates();
 uint8_t readInput();
 void applyLoopStates(uint8_t state);
 uint8_t reverseByte(uint8_t v);
-
-#endif
