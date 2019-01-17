@@ -237,14 +237,14 @@ MENU_ACTION dimUp()
 
 MENU_ACTION factoryReset()
 {
-	uint16_t addr = 0;
-	uint16_t i = 0;
+	uint16_t pageSize = E24_PAGE_SIZE(STORAGE_SIZE);
+	uint8_t pageCount = STORAGE_MAX_ADDR / pageSize;
 	uint8_t dots;
-	
+
 	debugPrint("Factory reset... ")
 	_display.clear();
-	do {
-		addr += _storage.fillPage(addr, 0);
+	for(uint16_t i = 0; i < pageCount; i++) {
+		_storage.fill(i * pageSize, 0, pageSize);
 		dots = (i++ / 2) % 8;
 
 		if (dots > 3) {
@@ -257,9 +257,9 @@ MENU_ACTION factoryReset()
 				_display.display(digit, AS1115_DOT);
 			}
 		}
-	} while (addr < STORAGE_MAX_ADDR);
-	debugPrintln("Done !");
+	}
 
+	debugPrintln("Done !");
 	resetConfig();
 
 	return MENU_ACTION_SELECT;
