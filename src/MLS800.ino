@@ -75,17 +75,17 @@ void setup()
 
 	_startedMillis = millis();
 	debugPrintln("Setup...");
-	Wire.begin();	
-	setupStorage();	
-	readConfig();		
+	Wire.begin();
+	setupStorage();
+	readConfig();
 	setupUi(_config.displayDim);
 	_display.display(_config.version);
-		
-	setupIo();	
+
+	setupIo();
 	setupLoops();
 
 	setupPatchManager();
-	applyPatch(_config.currentState);	
+	applyPatch(_config.currentState);
 
 	setupMidi();
 }
@@ -144,7 +144,7 @@ void loop()
 			}
 		}
 	}
-	
+
 	//handle user ui
 	if(_blinkLoopStates) blinkLoopStates();
 	if(_blinkEditLed) blinkEditLed();

@@ -20,10 +20,10 @@ public:
 	PatchManager(E24* storage);
 	~PatchManager();
 	void init(int startAddr, uint8_t patchesLength, uint8_t ccLength);
-	
+
 	bool load(uint8_t patchNumber, uint8_t& value);
 	bool load(uint8_t patchNumber, uint8_t ccNumber, uint8_t& value);
-	
+
 	bool save(uint8_t patchNumber, uint8_t value);
 	bool save(uint8_t patchNumber, uint8_t ccNumber, uint8_t value);
 };

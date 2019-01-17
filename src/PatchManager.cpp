@@ -29,7 +29,7 @@ bool PatchManager::load(uint8_t patchNumber, uint8_t ccNumber, uint8_t& value)
 
 bool PatchManager::save(uint8_t patchNumber, uint8_t value)
 {
-	return save(patchNumber, CC_UNDEFINED, value);	
+	return save(patchNumber, CC_UNDEFINED, value);
 }
 
 bool PatchManager::save(uint8_t patchNumber, uint8_t ccNumber, uint8_t value)
