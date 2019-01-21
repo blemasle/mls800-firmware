@@ -26,8 +26,8 @@ notifications:
     on_success: change
     on_failure: change
 before_deploy:
-- export $RELEASE_NAME=${TRAVIS_TAG:8}
-- export $RELEASE_FILE=$TRAVIS_BUILD_DIR/bin/mls800-$RELEASE_NAME.hex
+- export RELEASE_NAME=$TRAVIS_TAG
+- export RELEASE_FILE=$TRAVIS_BUILD_DIR/bin/mls800-$RELEASE_NAME.hex
 - cp $TRAVIS_BUILD_DIR/bin/Config.cpp.hex $RELEASE_FILE
 deploy:
   provider: releases
@@ -38,11 +38,4 @@ deploy:
   on:
     repo: blemasle/mls800-firmware
     tags: true
-    condition: $TRAVIS_TAG =~ ^release-([0-9]\.)+-
-    name: $RELEASE_NAME
-    prerelease: true
-  on:
-    repo: blemasle/mls800-firmware
-    tags: true
-    condition: $TRAVIS_TAG =~ ^release-([0-9]\.)+$
     name: $RELEASE_NAME
