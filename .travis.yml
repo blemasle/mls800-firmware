@@ -12,11 +12,11 @@ before_install:
 - sudo mv arduino-$ARDUINO_IDE_VERSION /usr/local/share/arduino
 - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
 install:
- - arduino --install-library "AS1115"
- - arduino --install-library "E24"
- - arduino --install-library "MCP23017"
- - arduino --install-library "MIDI Library"
- - arduino --install-library "MIDIUSB"
+- arduino --install-library "AS1115:1.1.1"
+- arduino --install-library "E24:1.1.0"
+- arduino --install-library "MCP23017:1.0.1"
+- arduino --install-library "MIDI Library:4.3.1"
+- arduino --install-library "MIDIUSB:1.0.3"
 before_script:
 - mkdir $TRAVIS_BUILD_DIR/bin
 script:
