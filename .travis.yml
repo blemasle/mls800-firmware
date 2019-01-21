@@ -1,24 +1,48 @@
 language: c
 env:
   global:
-    - ARDUINO_IDE_VERSION="1.8.5"
+  - ARDUINO_IDE_VERSION="1.8.5"
 before_install:
-  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
-  - sleep 3
-  - export DISPLAY=:1.0
-  - wget http://downloads.arduino.cc/arduino-$ARDUINO_IDE_VERSION-linux64.tar.xz
-  - tar xf arduino-$ARDUINO_IDE_VERSION-linux64.tar.xz
-  - sudo mv arduino-$ARDUINO_IDE_VERSION /usr/local/share/arduino
-  - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
+- "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile
+  --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
+- sleep 3
+- export DISPLAY=:1.0
+- wget http://downloads.arduino.cc/arduino-$ARDUINO_IDE_VERSION-linux64.tar.xz
+- tar xf arduino-$ARDUINO_IDE_VERSION-linux64.tar.xz
+- sudo mv arduino-$ARDUINO_IDE_VERSION /usr/local/share/arduino
+- sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
 install:
- - arduino --install-library "AS1115"
- - arduino --install-library "E24"
- - arduino --install-library "MCP23017"
- - arduino --install-library "MIDI Library"
- - arduino --install-library "MIDIUSB"
+- arduino --install-library "AS1115:1.1.1"
+- arduino --install-library "E24:1.1.0"
+- arduino --install-library "MCP23017:1.0.1"
+- arduino --install-library "MIDI Library:4.3.1"
+- arduino --install-library "MIDIUSB:1.0.3"
+before_script:
+- mkdir $TRAVIS_BUILD_DIR/bin
 script:
- - arduino --verify --board arduino:avr:micro $PWD/src/MLS800.ino
+- arduino --verbose --verify --board arduino:avr:micro --pref build.path=$TRAVIS_BUILD_DIR/bin $TRAVIS_BUILD_DIR/src/MLS800.ino
 notifications:
   email:
     on_success: change
     on_failure: change
+before_deploy:
+- export $RELEASE_NAME=${TRAVIS_TAG:8}
+- export $RELEASE_FILE=$TRAVIS_BUILD_DIR/bin/mls800-$RELEASE_NAME.hex
+- cp $TRAVIS_BUILD_DIR/bin/Config.cpp.hex $RELEASE_FILE
+deploy:
+  provider: releases
+  api_key:
+    secure: ZQAxpwOL2cxbQl5gYbc5k/oS/FKOuBmGFyupq1JgsoUsXDl5zc1HcbMdonuvlxdRUwxNoTJIa2aX4xjqKEUx4cZqQUd3eLQOEIQDt1ewWK7vawLSNYpJdnG7YjhD4Bz7LgpvW+IIIcRQ8mtWqiM8m1b3PdXi5wdn/Dm9SBZBdfSR2tYdShdw+tZFkmqetqXy+0+5ByTDomeagoe6/FmpBXfwebIPkyfk01twy+oMOqEE4d2DlOVeyLzKPcHsWbjJtjZJx05ERjuKF4enRECR3sWWlKxPjGkX4OLwsdfhM3pfAh1xyBC2meYnE2nBPw6O9ENUT8dbX7OKT3+ZQyefeD73s0x0xE2rvQ52+hBKUwXKyDYi4bzTFSgXq0akQEh+vKNeEMNagpyfXeBThSg0aI1wnv63I+CgITgspXtVPjYpc1AcJ/xVnPw4gtN7ly1o/iuVe4R5RNU/BefnbpwDxZnZc04eIlwWJ2CFNk2l41yE7F9mmYm0TYHgbV8ICm5eyUzCvtEBteMVB8KFSqxg8CAEabV0nMtpvGBPbklVL3UqfJdo4YPBB6AJYnm5A0X3GELujvuNq81XRSbLhGbS6/K6za8TemhzNhGLy153DS2SN4iO/hRNKqxIt+Wq1gxBcoUaPMG1KhCYA+p05ImEf9nCI93kPpN0cYaKGIHVz2g=
+  file: $RELEASE_FILE
+  skip_cleanup: true
+  on:
+    repo: blemasle/mls800-firmware
+    tags: true
+    condition: $TRAVIS_TAG =~ ^release-([0-9]\.)+-
+    name: $RELEASE_NAME
+    prerelease: true
+  on:
+    repo: blemasle/mls800-firmware
+    tags: true
+    condition: $TRAVIS_TAG =~ ^release-([0-9]\.)+$
+    name: $RELEASE_NAME
